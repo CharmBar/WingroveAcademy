@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 
 /**
  * Become an Insider sign-up.
- * Sends each sign-up to Wingrove's OWN HubSpot account (never ElevateED's). There are no built-in IDs:
- * set HUBSPOT_PORTAL_ID and HUBSPOT_INSIDER_FORM_ID in the Wingrove Vercel project.
+ * Sends each sign-up to Wingrove's OWN HubSpot account 242324058 (never ElevateED's 247877716).
+ * The form ID comes from HUBSPOT_INSIDER_FORM_ID in the Wingrove Vercel project; until it is set, nothing is sent.
  * Optionally also emails the team through Resend (RESEND_API_KEY + INSIDER_NOTIFY_TO + INSIDER_FROM).
  * If nothing is configured the visitor is told sign-ups aren't open yet, so no sign-up is silently lost.
  *
@@ -14,8 +14,15 @@ import { NextResponse } from 'next/server'
 const clean = (v: unknown, max = 300) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
+const WINGROVE_PORTAL = '242324058'
+
 async function sendHubSpot(body: Record<string, string>, req: Request) {
-  const portalId = process.env.HUBSPOT_PORTAL_ID
+  // Wingrove Academy's HubSpot account. A guard stops ElevateED's account being used here by mistake.
+  const portalId = process.env.HUBSPOT_PORTAL_ID || WINGROVE_PORTAL
+  if (portalId === '247877716') {
+    console.error('HUBSPOT_PORTAL_ID is set to the ElevateED account; Wingrove sign-ups were not sent.')
+    return false
+  }
   const formId = process.env.HUBSPOT_INSIDER_FORM_ID
   if (!portalId || !formId || process.env.HUBSPOT_DISABLED === 'true') return null
   const all = [

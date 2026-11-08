@@ -9,7 +9,7 @@ Built on the same platform as the ElevateED site (Next.js + Sanity + Vercel + Hu
 | Sanity project | `lvh3kfks` (Wingrove Academy) | `g9vmcwkr` |
 | Vercel project | `wingrove-academy` | ElevateED project |
 | Domain | wingroveacademy.ai | elevateed.com |
-| HubSpot | Wingrove's own account (env vars only) | ElevateED account 247877716 |
+| HubSpot | Wingrove account 242324058 | ElevateED account 247877716 |
 | Gate cookie | `wa_gate` | `ee_gate` |
 
 The app lives in `wingrove-web/`. Embedded Sanity Studio at `/studio`.
@@ -37,13 +37,13 @@ so the site renders before anything is entered in Sanity. Published Sanity conte
 | `SITE_PASSWORD` | the preview password (replaces the starting one) |
 | `SITE_GATE` | `on` now, `off` at launch |
 | `NEXT_PUBLIC_ADOBE_FONTS_KIT` | Adobe Fonts web project ID for Kepler + Soleil (optional) |
-| `HUBSPOT_PORTAL_ID`, `HUBSPOT_INSIDER_FORM_ID`, `HUBSPOT_REGION` | Wingrove's own HubSpot account and Become an Insider form |
+| `HUBSPOT_INSIDER_FORM_ID` | the Become an Insider form in Wingrove's HubSpot (account 242324058 is built in; `HUBSPOT_REGION` optional) |
 | `RESEND_API_KEY`, `INSIDER_NOTIFY_TO`, `INSIDER_FROM` | optional email alert per sign-up |
 
 ## Become an Insider → HubSpot
 
-`/api/insider` posts each sign-up to the HubSpot form named by `HUBSPOT_INSIDER_FORM_ID`.
-There are deliberately no built-in IDs, so nothing can land in ElevateED's HubSpot.
+`/api/insider` posts each sign-up to Wingrove's HubSpot account 242324058, to the form named by `HUBSPOT_INSIDER_FORM_ID`.
+The code refuses ElevateED's account (247877716), so nothing can land there by mistake.
 Fields sent: `email`, `firstname`, `lastname`, and two custom contact properties to create in Wingrove's HubSpot:
 `wingrove_role` (I am a…) and `inquiry_source` (`website_insider_signup`).
 Until the IDs are set, visitors are told sign-ups open soon, so no sign-up is lost silently.
