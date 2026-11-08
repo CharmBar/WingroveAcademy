@@ -1,0 +1,39 @@
+# Keeps Sanity's copy of the Wingrove Studio schema in step with the code.
+# Runs whenever the Studio schema changes on main, and can be run by hand from the Actions tab.
+# Needs a repository secret SANITY_AUTH_TOKEN (Wingrove project lvh3kfks → API → Tokens, "Deploy Studio" permission).
+name: Deploy Sanity schema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wingrove-web/sanity/**'
+      - 'wingrove-web/sanity.config.ts'
+      - 'wingrove-web/sanity.cli.ts'
+  workflow_dispatch:
+
+jobs:
+  deploy-schema:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wingrove-web
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: lvh3kfks
+      NEXT_PUBLIC_SANITY_DATASET: production
+      SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: wingrove-web/package-lock.json
+      - run: npm ci
+      - name: Check the token is set
+        run: |
+          if [ -z "$SANITY_AUTH_TOKEN" ]; then
+            echo "::error::Add a repository secret named SANITY_AUTH_TOKEN (Wingrove Sanity token with Deploy Studio permission)."
+            exit 1
+          fi
+      - run: npx sanity schema deploy
