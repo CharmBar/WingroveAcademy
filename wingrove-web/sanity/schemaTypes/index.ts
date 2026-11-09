@@ -149,12 +149,130 @@ export const person = defineType({
     }),
     defineField({ name: 'order', type: 'number' }),
     img('photo', 'Photo'),
-    defineField({ name: 'shortBio', type: 'text', rows: 4 }),
+    defineField({ name: 'shortBio', type: 'text', rows: 5 }),
+    defineField({ name: 'quote', type: 'text', rows: 5, description: 'Shown on the profile page. Leave a blank line between paragraphs.' }),
     access,
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: { select: { title: 'name', subtitle: 'role', media: 'photo' } },
 })
 
-export const schemaTypes = [siteSettings, homePage, person]
-export const singletonTypes = new Set(['siteSettings', 'homePage'])
+
+const text = (name: string, title?: string, rows = 3, group?: string) => defineField({ name, title, type: rows > 1 ? 'text' : 'string', rows: rows > 1 ? rows : undefined, group } as any)
+const strings = (name: string, title?: string, group?: string) => defineField({ name, title, type: 'array', group, of: [defineArrayMember({ type: 'string' })] })
+const paras = (name: string, title?: string, group?: string) => defineField({ name, title, type: 'array', group, description: 'One paragraph per item.', of: [defineArrayMember({ type: 'text', rows: 4 } as any)] })
+const labelled = (name: string, title?: string, group?: string) =>
+  defineField({
+    name,
+    title,
+    type: 'array',
+    group,
+    of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'label', type: 'string' }), defineField({ name: 'body', type: 'text', rows: 2 })], preview: { select: { title: 'label', subtitle: 'body' } } })],
+  })
+const galleryField = (group?: string) =>
+  defineField({
+    name: 'gallery',
+    type: 'array',
+    group,
+    of: [defineArrayMember({ type: 'object', fields: [img('image', 'Image'), defineField({ name: 'caption', type: 'string' })], preview: { select: { title: 'caption', media: 'image' } } })],
+  })
+const hero = (group = 'hero') => [
+  { ...img('heroImage', 'Hero image'), group },
+  text('heroEyebrow', 'Eyebrow', 1, group),
+  text('heroTitle', 'Title', 1, group),
+  text('heroLead', 'Lead', 3, group),
+]
+
+export const learningPage = defineType({
+  name: 'learningPage',
+  title: 'The Learning Experience',
+  type: 'document',
+  groups: [{ name: 'hero', title: 'Hero', default: true }, { name: 'body', title: 'Sections' }],
+  fields: [
+    ...hero(),
+    text('introLead', 'Intro (large)', 3, 'body'),
+    text('introBody', 'Intro', 3, 'body'),
+    text('divisionsTitle', 'Schools title', 1, 'body'),
+    text('divisionsBody', 'Schools text', 3, 'body'),
+    strings('divisions', 'Schools, in order', 'body'),
+    text('divisionsFrom', 'Starts with', 1, 'body'),
+    text('divisionsTo', 'Grows toward', 1, 'body'),
+    text('timeTitle', 'Time title', 1, 'body'),
+    text('timeBody', 'Time text', 3, 'body'),
+    strings('timeItems', 'Time features', 'body'),
+    text('timeNote', 'Time note', 2, 'body'),
+    { ...img('timeImage', 'Time image'), group: 'body' },
+    text('thirdTitle', 'Third Way title', 1, 'body'),
+    text('thirdBody', 'Third Way text', 4, 'body'),
+    labelled('thirdItems', 'Third Way intersections', 'body'),
+    text('curriculumTitle', 'Curriculum title', 1, 'body'),
+    text('curriculumBody', 'Curriculum text', 4, 'body'),
+    text('scaleBody', 'Scale line', 2, 'body'),
+    text('galleryTitle', 'Gallery title', 1, 'body'),
+    galleryField('body'),
+  ],
+  preview: { prepare: () => ({ title: 'The Learning Experience' }) },
+})
+
+export const campusPage = defineType({
+  name: 'campusPage',
+  title: 'The Campus',
+  type: 'document',
+  groups: [{ name: 'hero', title: 'Hero', default: true }, { name: 'body', title: 'Sections' }, { name: 'plan', title: 'Site plan' }],
+  fields: [
+    ...hero(),
+    defineField({
+      name: 'facts',
+      type: 'array',
+      group: 'body',
+      of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'value', type: 'string' }), defineField({ name: 'label', type: 'string' })], preview: { select: { title: 'value', subtitle: 'label' } } })],
+    }),
+    text('storyTitle', 'Story title', 1, 'body'),
+    paras('storyBody', 'Story', 'body'),
+    text('planTitle', 'Plan title', 1, 'plan'),
+    text('planIntro', 'Plan intro', 2, 'plan'),
+    { ...img('planImage', 'Illustrated site plan', 'Leave empty to use the current illustration. If you replace it, move the numbers to match.'), group: 'plan' },
+    defineField({
+      name: 'areas',
+      title: 'Numbered areas',
+      type: 'array',
+      group: 'plan',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'n', title: 'Number', type: 'number' }),
+            defineField({ name: 'label', type: 'string' }),
+            defineField({ name: 'x', title: 'Across (%)', type: 'number', description: '0 = left edge, 100 = right edge' }),
+            defineField({ name: 'y', title: 'Down (%)', type: 'number', description: '0 = top, 100 = bottom' }),
+            defineField({ name: 'note', type: 'text', rows: 2, description: 'Optional short description' }),
+          ],
+          preview: { select: { n: 'n', title: 'label' }, prepare: ({ n, title }) => ({ title: `${n}. ${title}` }) },
+        }),
+      ],
+    }),
+    text('galleryTitle', 'Gallery title', 1, 'body'),
+    galleryField('body'),
+    text('closing', 'Closing line', 3, 'body'),
+  ],
+  preview: { prepare: () => ({ title: 'The Campus' }) },
+})
+
+export const teamPage = defineType({
+  name: 'teamPage',
+  title: 'The Visionaries',
+  type: 'document',
+  groups: [{ name: 'hero', title: 'Hero', default: true }, { name: 'body', title: 'Sections' }],
+  fields: [
+    ...hero(),
+    paras('body', 'Introduction', 'body'),
+    text('leadershipTitle', 'Leadership heading', 1, 'body'),
+    text('leadershipIntro', 'Leadership intro', 2, 'body'),
+    text('advancementTitle', 'Advancement heading', 1, 'body'),
+    text('advancementIntro', 'Advancement intro', 2, 'body'),
+  ],
+  preview: { prepare: () => ({ title: 'The Visionaries' }) },
+})
+
+export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, person]
+export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage'])

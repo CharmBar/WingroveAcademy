@@ -1,0 +1,260 @@
+/**
+ * Content for The Learning Experience, The Campus and The Visionaries.
+ * Sanity content wins field by field; the approved copy below fills anything not entered yet.
+ * Sources: Figma "Wingrove Site - Revised Nov 3", WA26 brochure and WA26 Brand Update.
+ */
+import { client, imageUrl, type SanityImage } from './sanity'
+
+type Img = SanityImage & { alt?: string }
+export type Pic = { src: string; srcSet?: string; alt: string; caption?: string }
+
+const pick = <T,>(v: T | null | undefined | '', d: T): T => (v === null || v === undefined || v === '' || (Array.isArray(v) && v.length === 0) ? d : v)
+
+/** A local rendering in /public/media, unless an image was uploaded in Sanity. */
+export function pic(img: Img | undefined, fallback: string, alt: string, caption?: string, width = 2400): Pic {
+  const up = imageUrl(img, width)
+  return up
+    ? { src: up, alt: img?.alt || alt, caption }
+    : { src: `/media/${fallback}.webp`, srcSet: `/media/${fallback}-sm.webp 1200w, /media/${fallback}.webp 2400w`, alt, caption }
+}
+
+async function fetchQuery<T>(query: string, params: Record<string, unknown> = {}): Promise<T | null> {
+  if (!client) return null
+  try {
+    return (await client.fetch(query, params, { next: { revalidate: 60 } })) as T
+  } catch (e) {
+    console.error('Sanity fetch failed', query.slice(0, 60), e)
+    return null
+  }
+}
+
+const doc = async (id: string) => (await fetchQuery<Record<string, any>>(`*[_id == $id][0]`, { id })) || {}
+
+type GalleryItem = { image?: Img; caption?: string }
+const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; caption: string; alt: string }[]): Pic[] =>
+  items?.length ? items.map((g) => pic(g.image, 'campus', g.image?.alt || g.caption || '', g.caption, 1600)) : d.map((g) => pic(undefined, g.fallback, g.alt, g.caption, 1600))
+
+/* ---------------- The Learning Experience ---------------- */
+
+export const learningDefaults = {
+  heroEyebrow: 'The Learning Experience',
+  heroTitle: 'The Time and Space to Pursue Excellence',
+  heroLead:
+    'Wingrove’s original PK–12 curriculum will integrate rigorous academics, applied learning, the arts, athletics, and global experiences.',
+  introLead: 'At Wingrove, learning is personal. Students are encouraged to explore big ideas, follow their curiosities, and push the boundaries of what’s possible.',
+  introBody:
+    'Whether launching a business, conducting research, competing on the world stage, or creating something entirely new, every student is supported in discovering their strengths and turning them into impact.',
+  divisionsTitle: 'Lower, Middle, and Upper School',
+  divisionsBody: 'Distinct Lower, Middle, and Upper School models will guide students from supported inquiry toward greater intellectual independence, agency, and responsibility.',
+  divisions: ['Lower School', 'Middle School', 'Upper School'],
+  divisionsFrom: 'Supported inquiry',
+  divisionsTo: 'Independence, agency, and responsibility',
+  timeTitle: 'Time Advantage',
+  timeBody:
+    'At Wingrove, the schedule conforms to the learning. Time is a design resource, and we build the day, the week, and the year around what learning requires: depth, agency, and room to go further.',
+  timeItems: ['Five-week learning modules', 'Three-week intersessions', 'Longer class periods', 'Protected project time'],
+  timeNote: 'Together they allow students to explore ideas in depth and apply their knowledge through research, creative pursuits, and sustained projects.',
+  thirdTitle: 'A “Third” Way',
+  thirdBody:
+    'The choice is not between the outdated and the experimental. Wingrove advances what the best schools do well and redesigns what they do not. Our model is built at the intersections that prepare students for the most selective pursuits and for lives of strong judgment, deep purpose, and real responsibility.',
+  thirdItems: [
+    { label: 'Tradition & Innovation', body: 'Where timeless disciplines meet modern applications of learning.' },
+    { label: 'Rigor & Wellbeing', body: 'Where challenge is met by care.' },
+    { label: 'Depth & Partnership', body: 'Where scholarship leads to direction.' },
+    { label: 'Self & Society', body: 'Where personal growth meets responsibility to others.' },
+  ],
+  curriculumTitle: 'Bespoke Curriculum',
+  curriculumBody:
+    'Wingrove is designed from first principles, not convention. A credential built on our own curriculum, not a standardized one. The world’s most selective schools have moved in this direction. A Wingrove diploma is one-of-one.',
+  scaleBody: 'Designed to serve more than 1,000 students, Wingrove will offer the breadth and specialization to develop exceptional strengths across disciplines.',
+  galleryTitle: 'Spaces for Learning',
+  gallery: [
+    { fallback: 'classroom-english', caption: 'Exchange Classroom', alt: 'Exchange classroom with an oval seminar table and student work on the walls' },
+    { fallback: 'innovation-workshop', caption: 'Innovation Center Workshop', alt: 'Students working at long tables in the bright Innovation Center workshop' },
+    { fallback: 'upper-commons', caption: 'Upper School Commons', alt: 'Upper School commons with stepped wooden seating and a large screen' },
+    { fallback: 'workshop', caption: 'Workshop', alt: 'Workshop with lab benches, stools and orange pendant lights' },
+    { fallback: 'innovation-commons', caption: 'Innovation Center Commons', alt: 'Innovation Center commons with lounge seating and a reception desk' },
+    { fallback: 'classroom', caption: 'Exchange Classroom', alt: 'Students solving equations at the whiteboard in an exchange classroom' },
+  ],
+}
+
+export async function getLearning() {
+  const s = await doc('learningPage')
+  const d = learningDefaults
+  const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
+  return {
+    hero: pic(s.heroImage, 'innovation-workshop', 'Students at work in the Innovation Center workshop'),
+    heroEyebrow: t('heroEyebrow'),
+    heroTitle: t('heroTitle'),
+    heroLead: t('heroLead'),
+    introLead: t('introLead'),
+    introBody: t('introBody'),
+    divisionsTitle: t('divisionsTitle'),
+    divisionsBody: t('divisionsBody'),
+    divisions: pick(s.divisions as string[], d.divisions),
+    divisionsFrom: t('divisionsFrom'),
+    divisionsTo: t('divisionsTo'),
+    timeTitle: t('timeTitle'),
+    timeBody: t('timeBody'),
+    timeItems: pick(s.timeItems as string[], d.timeItems),
+    timeNote: t('timeNote'),
+    timeImage: pic(s.timeImage, 'campus-walk-2', 'Students and a teacher talking along a bright second-floor walkway'),
+    thirdTitle: t('thirdTitle'),
+    thirdBody: t('thirdBody'),
+    thirdItems: pick(s.thirdItems as { label: string; body: string }[], d.thirdItems),
+    curriculumTitle: t('curriculumTitle'),
+    curriculumBody: t('curriculumBody'),
+    scaleBody: t('scaleBody'),
+    galleryTitle: t('galleryTitle'),
+    gallery: gallery(s.gallery, d.gallery),
+  }
+}
+
+/* ---------------- The Campus ---------------- */
+
+export type Area = { n: number; label: string; x: number; y: number; note?: string }
+
+export const campusDefaults = {
+  heroEyebrow: 'The Campus',
+  heroTitle: 'An Exceptional Setting for Learning and Growth',
+  heroLead: 'Across 43.8 acres in the Village of Wellington, Wingrove’s campus will give physical form to its educational vision.',
+  facts: [
+    { value: '43.8', label: 'Acres in the Village of Wellington' },
+    { value: '1,000', label: 'Seats at opening, with room to grow' },
+    { value: 'PK–12', label: 'Lower, Middle, and Upper School' },
+    { value: 'Fall 2029', label: 'Opening' },
+  ],
+  storyTitle: 'Creating the Epicenter for Innovation and Excellence',
+  storyBody: [
+    'Wingrove Academy’s sustainable campus is purpose-built to support how students learn best, through exploration, creation, and connection. Designed by internationally acclaimed architects, the campus integrates classrooms, labs, and studios with open green spaces, encouraging collaboration, movement, and discovery throughout the day.',
+    'Situated on a 43.8-acre site, Wingrove is designed to open as a 1,000-seat, world-class PK–12 institution, with the flexibility to expand as the region grows. State-of-the-art facilities for the arts and athletics sit at the heart of campus life, alongside adaptable learning environments that foster focus, creativity, and meaningful connection.',
+    'Every detail is intentional. Because when students are inspired by where they learn, they are better prepared to become who they are meant to be.',
+  ],
+  planTitle: 'Explore the Campus',
+  planIntro: 'Select a number on the plan, or a name in the list, to find each part of the campus.',
+  // Positions are percentages across and down the illustrated plan; adjust them in the Studio.
+  areas: [
+    { n: 1, label: 'Gate Houses', x: 60.2, y: 83.4 },
+    { n: 2, label: 'Drop-off / Pick-up', x: 54.6, y: 56.2 },
+    { n: 3, label: 'Village Center', x: 35.9, y: 46.4 },
+    { n: 4, label: 'Lower School', x: 51.4, y: 31.3 },
+    { n: 5, label: 'Athletic Building', x: 17.7, y: 45.4 },
+    { n: 6, label: 'Aquatics Center', x: 13.6, y: 61.5 },
+    { n: 7, label: 'Black Box', x: 30.5, y: 40.5 },
+    { n: 8, label: 'Sports', x: 30.9, y: 67.4 },
+    { n: 9, label: 'Middle and Upper School', x: 46.5, y: 23.4 },
+    { n: 10, label: 'Theater', x: 19.7, y: 34.2 },
+    { n: 11, label: 'Baseball Field', x: 68.2, y: 58.6 },
+    { n: 12, label: 'Practice Fields', x: 49.4, y: 71.3 },
+    { n: 13, label: 'Parking Garage', x: 85.9, y: 72.3 },
+  ] as Area[],
+  galleryTitle: 'Around Campus',
+  gallery: [
+    { fallback: 'campus-walk', caption: 'Campus Walk', alt: 'Glass-walled gathering space along the campus walk with students at tables and an orange spiral stair' },
+    { fallback: 'dining', caption: 'Dining Courtyard', alt: 'Students on the lawn of the dining courtyard under a large shade tree' },
+    { fallback: 'courtyard', caption: 'Performing Arts Courtyard', alt: 'Performing arts courtyard lawn with the observatory dome beyond' },
+    { fallback: 'campus-walk-2', caption: 'Campus Walk, Second Floor', alt: 'Students and a teacher along the bright second-floor walkway' },
+    { fallback: 'axon', caption: 'Overall Axon', alt: 'Axonometric model of the main academic buildings' },
+    { fallback: 'commons', caption: 'Middle School Commons', alt: 'Students on the stepped wooden seating of the Middle School commons' },
+  ],
+  closing: 'Opening in Fall 2029, the campus is conceived as an enduring educational and civic anchor, enriching Palm Beach County through learning, culture, and community connection.',
+}
+
+export async function getCampus() {
+  const s = await doc('campusPage')
+  const d = campusDefaults
+  const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
+  const planUp = imageUrl(s.planImage, 2400)
+  return {
+    hero: pic(s.heroImage, 'arts-courtyard', 'Performing arts courtyard with students crossing the plaza beneath a red canopy'),
+    heroEyebrow: t('heroEyebrow'),
+    heroTitle: t('heroTitle'),
+    heroLead: t('heroLead'),
+    facts: pick(s.facts as { value: string; label: string }[], d.facts),
+    storyTitle: t('storyTitle'),
+    storyBody: pick(s.storyBody as string[], d.storyBody),
+    planTitle: t('planTitle'),
+    planIntro: t('planIntro'),
+    plan: planUp ? { src: planUp, srcSet: undefined } : { src: '/media/campus.webp', srcSet: '/media/campus-sm.webp 900w, /media/campus.webp 1246w' },
+    areas: pick(s.areas as Area[], d.areas),
+    galleryTitle: t('galleryTitle'),
+    gallery: gallery(s.gallery, d.gallery),
+    closing: t('closing'),
+  }
+}
+
+/* ---------------- The Visionaries ---------------- */
+
+export type Person = {
+  name: string
+  slug: string
+  role?: string
+  group: 'leadership' | 'advancement' | 'founder' | 'advisor'
+  order: number
+  photo?: string | null
+  shortBio?: string
+  quote?: string
+}
+
+export const teamDefaults = {
+  heroEyebrow: 'The Visionaries',
+  heroTitle: 'Global Experience, A Shared Ambition for Wingrove.',
+  heroLead: 'Wingrove brings together internationally accomplished educators and leaders with experience designing, opening, and guiding distinguished schools around the world.',
+  body: [
+    'Wingrove Academy is being built by people who have done this before, at the highest levels, at the institutions that set the standard. That expertise comes from Karen Yung and the team she has assembled at ElevateED to build and support Wingrove.',
+    'Our team has designed and led Avenues: The World School in New York, Green School in Bali, Dulwich College International across Asia, and Da Vinci Schools in Los Angeles. They have taught at High Tech High and the University of Cambridge, led major philanthropic campaigns, and scaled talent infrastructure at Teach for America. Our athletics program is being designed by leaders from the University of Delaware and Iowa State. Our construction team has overseen capital projects at The Dalton School and Horace Mann.',
+  ],
+  leadershipTitle: 'Founding Leadership',
+  leadershipIntro: 'The ElevateED team designing Wingrove’s academic model, campus, and organization.',
+  advancementTitle: 'Advancement',
+  advancementIntro: 'The team building the community of families, donors, and partners behind Wingrove.',
+}
+
+const P = (name: string, slug: string, group: Person['group'], order: number, role?: string): Person => ({ name, slug, group, order, role })
+/** Used only until the team is entered in Sanity (bios and photos live there). */
+export const peopleDefaults: Person[] = [
+  P('Karen Yung', 'karen-yung', 'leadership', 10, 'Founder'),
+  P('Jeff Clark', 'jeff-clark', 'leadership', 20, 'Chair & CEO'),
+  P('Min Kim', 'min-kim', 'leadership', 30, 'Chief Financial and Operating Officer'),
+  P('Dr. Nicole Assisi', 'nicole-assisi', 'leadership', 40, 'Senior Advisor'),
+  P('Edward Huang', 'edward-huang', 'leadership', 50, 'Chief Innovation Officer'),
+  P('Jason Zubatkin', 'jason-zubatkin', 'leadership', 60, 'Managing Director, Design & Construction'),
+  P('Chrissi Rawak', 'chrissi-rawak', 'advancement', 110, 'Managing Director, Advancement & Organizational Excellence'),
+  P('Amanda Hoskins', 'amanda-hoskins', 'advancement', 120, 'Director, Data Strategy & Operations'),
+  P('Shannan Brown', 'shannan-brown', 'advancement', 130),
+  P('Ashley Stone', 'ashley-stone', 'advancement', 140),
+  P('Jeff Foss', 'jeff-foss', 'advancement', 150),
+  P('Jennifer Childs', 'jennifer-childs', 'advancement', 160),
+  P('Samantha Huge', 'samantha-huge', 'advancement', 170),
+  P('Tom Bliss', 'tom-bliss', 'advancement', 180),
+]
+
+const PEOPLE_Q = `*[_type == "person" && (!defined(access) || access == "public")] | order(order asc){
+  name, "slug": slug.current, role, group, order, shortBio, quote, "photo": photo.asset->url
+}`
+
+export async function getPeople(): Promise<Person[]> {
+  const rows = await fetchQuery<Person[]>(PEOPLE_Q)
+  return rows?.length ? rows.filter((p) => p.slug) : peopleDefaults
+}
+
+export async function getPerson(slug: string) {
+  return (await getPeople()).find((p) => p.slug === slug) || null
+}
+
+export async function getTeam() {
+  const s = await doc('teamPage')
+  const d = teamDefaults
+  const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
+  return {
+    hero: pic(s.heroImage, 'dining', 'Students gathered on the lawn of the dining courtyard'),
+    heroEyebrow: t('heroEyebrow'),
+    heroTitle: t('heroTitle'),
+    heroLead: t('heroLead'),
+    body: pick(s.body as string[], d.body),
+    leadershipTitle: t('leadershipTitle'),
+    leadershipIntro: t('leadershipIntro'),
+    advancementTitle: t('advancementTitle'),
+    advancementIntro: t('advancementIntro'),
+  }
+}

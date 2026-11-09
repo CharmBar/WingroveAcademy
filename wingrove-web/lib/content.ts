@@ -48,9 +48,9 @@ export const defaults = {
     visionRole: 'Founder, ElevateED',
     chaptersTitle: 'A 43.8-acre campus built for how students learn best.',
     chapters: [
-      { eyebrow: 'The Learning Experience', title: 'The Time and Space to Pursue Excellence', body: 'Distinct Lower, Middle, and Upper School models, five-week learning modules and three-week intersessions.', linkLabel: 'Explore learning', href: '#chapters', fallback: 'classroom', alt: 'Exchange classroom with an oval seminar table and students at the whiteboard' },
-      { eyebrow: 'The Campus', title: 'An Exceptional Setting for Learning and Growth', body: 'Academic, arts, and athletics facilities connected through open green space and lakes.', linkLabel: 'Explore the campus', href: '#chapters', fallback: 'campus', alt: 'Illustrated aerial view of the Wingrove campus with its lakes, academic buildings and athletic fields' },
-      { eyebrow: 'The Visionaries', title: 'Global Experience, A Shared Ambition', body: 'The founders and advancement team building Wingrove, with experience designing, opening, and guiding distinguished schools around the world.', linkLabel: 'Meet the team', href: '#chapters', fallback: 'dining', alt: 'Dining courtyard with students gathered on the lawn under a shade tree' },
+      { eyebrow: 'The Learning Experience', title: 'The Time and Space to Pursue Excellence', body: 'Distinct Lower, Middle, and Upper School models, five-week learning modules and three-week intersessions.', linkLabel: 'Explore learning', href: '/learning-experience', fallback: 'classroom', alt: 'Exchange classroom with an oval seminar table and students at the whiteboard' },
+      { eyebrow: 'The Campus', title: 'An Exceptional Setting for Learning and Growth', body: 'Academic, arts, and athletics facilities connected through open green space and lakes.', linkLabel: 'Explore the campus', href: '/campus', fallback: 'campus', alt: 'Illustrated aerial view of the Wingrove campus with its lakes, academic buildings and athletic fields' },
+      { eyebrow: 'The Visionaries', title: 'Global Experience, A Shared Ambition', body: 'The founders and advancement team building Wingrove, with experience designing, opening, and guiding distinguished schools around the world.', linkLabel: 'Meet the team', href: '/visionaries', fallback: 'dining', alt: 'Dining courtyard with students gathered on the lawn under a shade tree' },
     ] as Chapter[],
     insiderEyebrow: 'Become an Insider',
     insiderTitle: 'A Legacy in the Making',

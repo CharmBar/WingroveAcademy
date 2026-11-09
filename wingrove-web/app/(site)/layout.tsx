@@ -24,9 +24,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <nav className="hdr__nav" aria-label="Main">
           <a href="/#welcome">Welcome</a>
           <a href="/#distinct">Why Wingrove</a>
-          <a href="/#chapters">Learning Experience</a>
-          <a href="/#chapters">The Campus</a>
-          <a href="/#chapters">The Visionaries</a>
+          <a href="/learning-experience">Learning Experience</a>
+          <a href="/campus">The Campus</a>
+          <a href="/visionaries">The Visionaries</a>
           <a className="btn" href="/#updates">
             {s.ctaLabel}
           </a>
