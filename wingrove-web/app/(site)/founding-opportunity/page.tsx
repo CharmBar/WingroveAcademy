@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/Blocks'
 import InsiderForm from '@/components/InsiderForm'
-import { getGiving } from '@/lib/pages'
+import { PersonCard } from '@/components/Person'
+import { getGiving, getPeople, getTeam } from '@/lib/pages'
 
 export const revalidate = 60
 export const metadata: Metadata = {
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
 
 /** Donor page. Not in the navigation: reached from the Advancement band on The Visionaries. */
 export default async function FoundingOpportunityPage() {
-  const g = await getGiving()
+  const [g, t, people] = await Promise.all([getGiving(), getTeam(), getPeople()])
+  const advancement = people.filter((p) => p.group === 'advancement')
   return (
     <>
       <PageHero image={g.hero} eyebrow={g.heroEyebrow} title={g.heroTitle} lead={g.heroLead} />
@@ -74,14 +76,26 @@ export default async function FoundingOpportunityPage() {
               {g.giftPerks.map((p) => (
                 <li key={p}>{p}</li>
               ))}
-              <li>
-                {g.otherBody} <a href={`mailto:${g.otherEmail}?subject=${encodeURIComponent('Founding gift to Wingrove Academy')}`}>{g.otherLinkLabel}</a>.
-              </li>
+              <li>{g.otherBody}</li>
             </ul>
           </div>
           <InsiderForm button={g.formButton} defaultRole="Donor or partner" />
         </div>
       </section>
+      {advancement.length > 0 && (
+        <section className="band team" id="advancement">
+          <div className="wrap">
+            <h2 className="h2">{t.advancementTitle}</h2>
+            <hr className="rule rule--green" />
+            <p className="section-lead">{t.advancementIntro}</p>
+            <div className="team__grid">
+              {advancement.map((p) => (
+                <PersonCard key={p.slug} p={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   )
 }

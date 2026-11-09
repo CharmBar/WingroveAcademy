@@ -328,9 +328,7 @@ export const givingDefaults = {
     'Hear directly from the founders and advancement team shaping the school',
   ],
   formButton: 'Connect With Advancement',
-  otherBody: 'To discuss a multiyear pledge, a gift of appreciated stock, or naming and recognition opportunities,',
-  otherLinkLabel: 'connect with our advancement team',
-  otherEmail: 'info@wingroveacademy.org',
+  otherBody: 'To discuss a multiyear pledge, a gift of appreciated stock, or naming and recognition opportunities, connect with our advancement team.',
 }
 
 export async function getGiving() {
@@ -356,7 +354,5 @@ export async function getGiving() {
     giftBody: t('giftBody'),
     formButton: t('formButton'),
     otherBody: t('otherBody'),
-    otherLinkLabel: t('otherLinkLabel'),
-    otherEmail: t('otherEmail'),
   }
 }

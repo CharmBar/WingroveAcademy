@@ -317,9 +317,7 @@ export const givingPage = defineType({
     text('giftBody', 'Gift: text', 3, 'body'),
     strings('giftPerks', 'Gift: list', 'body'),
     text('formButton', 'Form button', 1, 'body'),
-    text('otherBody', 'Gift: last list item, text before the link', 3, 'body'),
-    text('otherLinkLabel', 'Gift: last list item, link text', 1, 'body'),
-    text('otherEmail', 'Gift: last list item, email the link opens', 1, 'body'),
+    text('otherBody', 'Gift: last list item', 3, 'body'),
   ],
   preview: { prepare: () => ({ title: 'A Founding Opportunity' }) },
 })
