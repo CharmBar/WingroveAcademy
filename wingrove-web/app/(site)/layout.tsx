@@ -39,6 +39,20 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <img src="/brand/logo-white.png" alt={s.title} />
             <p className="place">{s.place}</p>
           </div>
+          <div className="answerer" aria-labelledby="answerer-title">
+            <p className="answerer__title" id="answerer-title">
+              {s.answererTitle}
+            </p>
+            <p className="answerer__text">{s.answererText}</p>
+            {/* The Q&A service isn't open yet */}
+            <p className="answerer__soon">
+              {s.answererStatus}
+              <svg className="answerer__chev" viewBox="0 0 30 28" aria-hidden="true">
+                <path d="M3 2C9 6 12 10 13 14C12 18 9 22 3 26" />
+                <path d="M14 2C20 6 23 10 24 14C23 18 20 22 14 26" />
+              </svg>
+            </p>
+          </div>
           <div>
             <p style={{ margin: 0, color: 'var(--white)' }}>Questions? Contact us</p>
             <p style={{ marginTop: '.3em' }}>
@@ -48,24 +62,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               Instagram {s.instagram} &nbsp;·&nbsp; LinkedIn {s.linkedin}
             </p>
             <p className="small">Privacy Policy</p>
-          </div>
-          <div className="answerer" aria-labelledby="answerer-title">
-            <div className="answerer__head">
-              <p className="answerer__title" id="answerer-title">
-                {s.answererTitle}
-              </p>
-              <span className="answerer__badge">{s.answererStatus}</span>
-            </div>
-            <p className="answerer__text">{s.answererText}</p>
-            {/* Placeholder only: the Q&A service isn't connected yet */}
-            <div className="answerer__box" aria-hidden="true">
-              <span>Ask a question about Wingrove…</span>
-              <span className="answerer__send">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 12h13M13 6l6 6-6 6" />
-                </svg>
-              </span>
-            </div>
           </div>
         </div>
       </footer>
