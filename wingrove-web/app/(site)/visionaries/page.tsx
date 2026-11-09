@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: 'The Visionaries', description: 'The 
 export default async function VisionariesPage() {
   const [t, people] = await Promise.all([getTeam(), getVisiblePeople()])
   const leaders = t.showLeadership ? people.filter((p) => p.group !== 'advancement') : []
-  const advancement = people.filter((p) => p.group === 'advancement')
+  const advancement = t.showAdvancement ? people.filter((p) => p.group === 'advancement') : []
   return (
     <>
       <PageHero image={t.hero} eyebrow={t.heroEyebrow} title={t.heroTitle} lead={t.heroLead} />

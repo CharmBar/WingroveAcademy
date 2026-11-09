@@ -279,6 +279,7 @@ export const teamPage = defineType({
     defineField({ name: 'showLeadership', title: 'Show Founding Leadership', type: 'boolean', group: 'body', initialValue: false, description: 'Off: only the Advancement team (and their profiles) appear on the site.' }),
     text('leadershipTitle', 'Leadership heading', 1, 'body'),
     text('leadershipIntro', 'Leadership intro', 2, 'body'),
+    defineField({ name: 'showAdvancement', title: 'Show Wingrove Academy Advancement Team', type: 'boolean', group: 'body', initialValue: true, description: 'Off: the Advancement team is hidden on this page. It still appears on the A Founding Opportunity donor page, and their profiles stay available.' }),
     text('advancementTitle', 'Advancement heading', 1, 'body'),
     text('advancementIntro', 'Advancement intro', 2, 'body'),
     text('givingEyebrow', 'Closing band: eyebrow', 1, 'body'),

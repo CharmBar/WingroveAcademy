@@ -282,6 +282,7 @@ export async function getTeam() {
     heroLead: t('heroLead'),
     body: pick(s.body as string[], d.body),
     showLeadership: s.showLeadership === true,
+    showAdvancement: s.showAdvancement !== false,
     leadershipTitle: t('leadershipTitle'),
     leadershipIntro: t('leadershipIntro'),
     advancementTitle: t('advancementTitle'),
