@@ -253,7 +253,27 @@ export const learningPage = defineType({
     }),
     text('timeTitle', 'Time title', 1, 'body'),
     text('timeBody', 'Time text', 3, 'body'),
-    strings('timeItems', 'Time features', 'body'),
+    text('rhythmTitle', 'Rhythm chart: label', 1, 'body'),
+    defineField({
+      name: 'rhythm',
+      title: 'Rhythm chart: blocks (focused learning, then intersession)',
+      type: 'array',
+      group: 'body',
+      validation: (r) => r.max(2),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'weeks', type: 'number', description: 'Sets the block width, e.g. 5' }),
+            defineField({ name: 'label', type: 'string', description: 'e.g. Focused learning' }),
+            defineField({ name: 'detailTitle', title: 'Detail heading', type: 'string', description: 'e.g. Longer class periods' }),
+            defineField({ name: 'detailBody', title: 'Detail text', type: 'string' }),
+          ],
+          preview: { select: { title: 'label', weeks: 'weeks' }, prepare: ({ title, weeks }) => ({ title: `${weeks} weeks · ${title}` }) },
+        }),
+      ],
+    }),
+    text('rhythmCaption', 'Rhythm chart: caption', 2, 'body'),
     text('timeNote', 'Time note', 2, 'body'),
     { ...img('timeImage', 'Time image'), group: 'body' },
     text('thirdTitle', 'Third Way title', 1, 'body'),

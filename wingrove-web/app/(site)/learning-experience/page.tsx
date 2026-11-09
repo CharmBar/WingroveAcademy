@@ -57,11 +57,31 @@ export default async function LearningPage() {
           <div className="time__text">
             <div className="eyebrow">{l.timeTitle}</div>
             <p className="time__body">{l.timeBody}</p>
-            <ul className="time__items">
-              {l.timeItems.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
+            {l.rhythm.length > 0 && (
+              <figure className="rhythm">
+                <figcaption className="rhythm__title">{l.rhythmTitle}</figcaption>
+                <div className="rhythm__bars" style={{ gridTemplateColumns: l.rhythm.map((b) => `${b.weeks}fr`).join(' ') }}>
+                  {l.rhythm.map((b, k) => (
+                    <div key={k} className={`rhythm__block rhythm__block--${k}`}>
+                      <strong>{b.weeks} weeks</strong>
+                      <span>{b.label}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="rhythm__ticks" aria-hidden="true">
+                  {l.rhythm.flatMap((b, k) => Array.from({ length: Math.min(12, Math.round(b.weeks)) }, (_, w) => <i key={`${k}-${w}`} className={`rhythm__tick--${k}`} />))}
+                </div>
+                <div className="rhythm__details">
+                  {l.rhythm.map((b, k) => (
+                    <div key={k}>
+                      <h3>{b.detailTitle}</h3>
+                      <p>{b.detailBody}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="rhythm__caption">{l.rhythmCaption}</p>
+              </figure>
+            )}
             <p className="time__note">{l.timeNote}</p>
           </div>
           <div className="time__img">

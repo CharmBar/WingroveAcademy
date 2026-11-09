@@ -43,6 +43,7 @@ const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; captio
 
 /* ---------------- The Learning Experience ---------------- */
 
+export type RhythmBlock = { weeks: number; label: string; detailTitle: string; detailBody: string }
 export type Division = { name: string; grades: string; stage: string; focus: string; body: string }
 type Img2 = SanityImage & { alt?: string }
 export type ProgramStage = { title: string; body: string }
@@ -100,7 +101,12 @@ export const learningDefaults = {
   timeTitle: 'Time Advantage',
   timeBody:
     'At Wingrove, the schedule conforms to the learning. Time is a design resource, and we build the day, the week, and the year around what learning requires: depth, agency, and room to go further.',
-  timeItems: ['Five-week learning modules', 'Three-week intersessions', 'Longer class periods', 'Protected project time'],
+  rhythmTitle: 'A different rhythm of learning',
+  rhythm: [
+    { weeks: 5, label: 'Focused learning', detailTitle: 'Longer class periods', detailBody: 'Time to explore ideas without constant interruption.' },
+    { weeks: 3, label: 'Intersession', detailTitle: 'Protected project time', detailBody: 'Time to investigate, create, and apply learning.' },
+  ] as RhythmBlock[],
+  rhythmCaption: 'Conceptual illustration of the two scheduling structures, not a literal calendar sequence.',
   timeNote: 'Together they allow students to explore ideas in depth and apply their knowledge through research, creative pursuits, and sustained projects.',
   thirdTitle: 'A “Third” Way',
   thirdBody:
@@ -155,7 +161,9 @@ export async function getLearning() {
     }),
     timeTitle: t('timeTitle'),
     timeBody: t('timeBody'),
-    timeItems: pick(s.timeItems as string[], d.timeItems),
+    rhythmTitle: t('rhythmTitle'),
+    rhythm: (pick(s.rhythm as RhythmBlock[], d.rhythm) as RhythmBlock[]).filter((b) => b && Number(b.weeks) > 0).slice(0, 2),
+    rhythmCaption: t('rhythmCaption'),
     timeNote: t('timeNote'),
     timeImage: pic(s.timeImage, 'campus-walk-2', 'Students and a teacher talking along a bright second-floor walkway'),
     thirdTitle: t('thirdTitle'),
