@@ -8,7 +8,8 @@ const INTERVAL = 8000
 /**
  * What Makes Wingrove Distinctive: one large card at a time (image beside the text), the next card
  * peeking in. Advances on its own every 8 seconds; pauses on hover, focus, when off screen, and for
- * visitors who turn off motion.
+ * visitors who turn off motion. On touch screens the cards can be swiped left and right; vertical
+ * swipes still scroll the page.
  */
 export default function PillarCarousel({ items }: { items: PillarCard[] }) {
   const n = items.length
@@ -17,6 +18,11 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
   const [visible, setVisible] = useState(false)
   const [reduce, setReduce] = useState(false)
   const root = useRef<HTMLDivElement>(null)
+  // Swipe: follows the finger once a gesture is clearly sideways, then snaps to the next or previous card.
+  const drag = useRef<{ x: number; y: number; id: number; dx: number; lock?: 'x' | 'y' } | null>(null)
+  const swiped = useRef(false)
+  const [dx, setDx] = useState(0)
+  const [dragging, setDragging] = useState(false)
 
   const go = useCallback((k: number) => setI(((k % n) + n) % n), [n])
 
@@ -35,6 +41,43 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
     const t = window.setTimeout(() => go(i + 1), INTERVAL)
     return () => window.clearTimeout(t)
   }, [running, i, go])
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === 'mouse' || n < 2) return
+    drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, dx: 0 }
+  }
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d || e.pointerId !== d.id) return
+    const mx = e.clientX - d.x
+    const my = e.clientY - d.y
+    if (!d.lock && (Math.abs(mx) > 8 || Math.abs(my) > 8)) {
+      d.lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y'
+      if (d.lock === 'x') {
+        e.currentTarget.setPointerCapture(e.pointerId)
+        setDragging(true)
+        setPaused(true)
+      }
+    }
+    if (d.lock === 'x') {
+      d.dx = mx
+      setDx(mx)
+    }
+  }
+  const onPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d || e.pointerId !== d.id) return
+    drag.current = null
+    if (d.lock !== 'x') return
+    const limit = Math.min(80, e.currentTarget.clientWidth * 0.15)
+    if (d.dx < -limit) go(i + 1)
+    else if (d.dx > limit) go(i - 1)
+    swiped.current = true
+    window.setTimeout(() => (swiped.current = false), 50)
+    setDragging(false)
+    setDx(0)
+    setPaused(false)
+  }
 
   if (!n) return null
   const pad = (k: number) => String(k).padStart(2, '0')
@@ -55,8 +98,14 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
         if (e.key === 'ArrowLeft') go(i - 1)
       }}
     >
-      <div className="pc__viewport">
-        <ol className="pc__track" style={{ transform: `translateX(calc(${-i} * (var(--pc-slide) + var(--pc-gap))))` }}>
+      <div
+        className={`pc__viewport${dragging ? ' is-dragging' : ''}`}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+      >
+        <ol className="pc__track" style={{ transform: `translateX(calc(${-i} * (var(--pc-slide) + var(--pc-gap)) + ${dx}px))` }}>
           {items.map((p, k) => (
             <li
               key={`${p.label}-${k}`}
@@ -64,10 +113,10 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
               aria-roledescription="slide"
               aria-label={`${k + 1} of ${n}`}
               aria-hidden={k !== i}
-              onClick={() => k !== i && go(k)}
+              onClick={() => !swiped.current && k !== i && go(k)}
             >
               <div className="pc__media">
-                <img src={p.src} srcSet={p.srcSet} sizes="(max-width:880px) 92vw, 48vw" alt={p.alt} loading={k < 2 ? 'eager' : 'lazy'} />
+                <img src={p.src} srcSet={p.srcSet} sizes="(max-width:880px) 92vw, 48vw" alt={p.alt} loading={k < 2 ? 'eager' : 'lazy'} draggable={false} />
               </div>
               <div className="pc__text">
                 <div className="pc__count">
