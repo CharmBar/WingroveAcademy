@@ -44,6 +44,10 @@ const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; captio
 /* ---------------- The Learning Experience ---------------- */
 
 export type Division = { name: string; grades: string; stage: string; focus: string; body: string }
+type Img2 = SanityImage & { alt?: string }
+export type ProgramStage = { title: string; body: string }
+export type Program = { name: string; image?: Img2; fallback?: string; alt?: string; lower: ProgramStage; middle: ProgramStage; upper: ProgramStage }
+export type ProgramView = { name: string; image: Pic; stages: ProgramStage[] }
 
 export const learningDefaults = {
   heroEyebrow: 'The Learning Experience',
@@ -62,6 +66,37 @@ export const learningDefaults = {
     { name: 'Middle School', grades: '5–8', stage: 'Develop', focus: 'Inquiry, Application & Agency', body: 'Deepen understanding through interdisciplinary inquiry, authentic problem-solving, and growing ownership of learning, interests, and responsibilities.' },
     { name: 'Upper School', grades: '9–12', stage: 'Distinguish', focus: 'Mastery, Purpose & Impact', body: 'Pursue intellectual depth and individual distinction through advanced scholarship, original work, and purposeful contributions beyond the classroom.' },
   ] as Division[],
+  showPrograms: false,
+  programsEyebrow: 'Signature Programs',
+  programsTitle: 'Distinct programs. One connected journey.',
+  programsBody:
+    'From foundational discovery to advanced achievement, Wingrove’s signature programs deepen students’ knowledge, skills, and independence at every stage. Programs such as Mathematics; Arts, Design & Entrepreneurship; and Athletics, Wellness & Movement are integral to every student’s experience, building essential capabilities while opening paths to pursue individual strengths to an exceptional level.',
+  programs: [
+    {
+      name: 'Mathematics',
+      fallback: 'classroom',
+      alt: 'Students working through problems at the whiteboard in an exchange classroom',
+      lower: { title: 'Explore & Build', body: 'Develop confidence with numbers, patterns, and mathematical reasoning through exploration, inquiry, and creative problem-solving.' },
+      middle: { title: 'Apply & Solve', body: 'Build fluency with increasingly complex concepts in geometry, statistics, probability, and coding, applying mathematics to real-world challenges.' },
+      upper: { title: 'Advance & Pioneer', body: 'Pursue mathematics beyond traditional grade levels, with opportunities for advanced research, original proofs, data science, and mathematical innovation.' },
+    },
+    {
+      name: 'Arts, Design & Entrepreneurship',
+      fallback: 'workshop',
+      alt: 'Students building and testing ideas in the workshop',
+      lower: { title: 'Imagine & Create', body: 'Build foundational skills in visual and performing arts, explore design principles, and develop confidence in expressing original ideas.' },
+      middle: { title: 'Design & Collaborate', body: 'Use design thinking to prototype solutions, create original work, and develop entrepreneurial skills through projects with authentic audiences.' },
+      upper: { title: 'Innovate & Launch', body: 'Master creative disciplines, develop professional portfolios, and launch original projects or ventures through mentorship, production, and real-world engagement.' },
+    },
+    {
+      name: 'Athletics, Wellness & Movement',
+      fallback: 'innovation-commons',
+      alt: 'Indoor competition pool with swimmers in the lanes and a sunlit spectator walkway',
+      lower: { title: 'Move & Grow', body: 'Develop coordination, swimming proficiency, physical confidence, and healthy habits through daily movement, play, and sports exploration.' },
+      middle: { title: 'Train & Strengthen', body: 'Build strength, speed, agility, and sport-specific skills while developing resilience, teamwork, and lifelong wellness practices.' },
+      upper: { title: 'Perform & Thrive', body: 'Pursue excellence in competitive sports, refine athletic performance, and build lifelong practices in physical conditioning, recovery, nutrition, and wellbeing.' },
+    },
+  ] as Program[],
   timeTitle: 'Time Advantage',
   timeBody:
     'At Wingrove, the schedule conforms to the learning. Time is a design resource, and we build the day, the week, and the year around what learning requires: depth, agency, and room to go further.',
@@ -106,6 +141,18 @@ export async function getLearning() {
     divisionsBody: t('divisionsBody'),
     divisionsSubtitle: t('divisionsSubtitle'),
     divisionCards: pick(s.divisionCards as Division[], d.divisionCards),
+    showPrograms: s.showPrograms === true,
+    programsEyebrow: t('programsEyebrow'),
+    programsTitle: t('programsTitle'),
+    programsBody: t('programsBody'),
+    programs: (pick(s.programs as Program[], d.programs) as Program[]).map((p, i): ProgramView => {
+      const def = d.programs[i] || d.programs[0]
+      return {
+        name: p.name || def.name,
+        image: pic(p.image, p.fallback || def.fallback || 'classroom', p.image?.alt || p.alt || def.alt || '', undefined, 1800),
+        stages: (['lower', 'middle', 'upper'] as const).map((k) => ({ title: p[k]?.title || '', body: p[k]?.body || '' })),
+      }
+    }),
     timeTitle: t('timeTitle'),
     timeBody: t('timeBody'),
     timeItems: pick(s.timeItems as string[], d.timeItems),

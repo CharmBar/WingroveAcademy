@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Gallery, InsiderBand, PageHero } from '@/components/Blocks'
+import ProgramJourney from '@/components/ProgramJourney'
 import { getLearning } from '@/lib/pages'
 
 export const revalidate = 60
@@ -41,6 +42,15 @@ export default async function LearningPage() {
           </ol>
         </div>
       </section>
+
+      <ProgramJourney
+        enabled={l.showPrograms}
+        eyebrow={l.programsEyebrow}
+        title={l.programsTitle}
+        body={l.programsBody}
+        programs={l.programs}
+        divisions={l.divisionCards}
+      />
 
       <section className="band time">
         <div className="wrap time__grid">
