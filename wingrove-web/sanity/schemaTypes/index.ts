@@ -155,6 +155,12 @@ export const person = defineType({
       },
     }),
     defineField({ name: 'order', type: 'number' }),
+    defineField({
+      name: 'leadershipOrder',
+      title: 'Also show in Founding Leadership',
+      type: 'number',
+      description: 'For someone outside the Leadership group (e.g. Advancement) who should also appear in Founding Leadership. Enter a position: leaders are sorted by their Order, so 55 places someone between 50 and 60. Leave empty to show them only in their own group.',
+    }),
     img('photo', 'Photo'),
     defineField({ name: 'shortBio', type: 'text', rows: 5 }),
     defineField({ name: 'quote', type: 'text', rows: 5, description: 'Shown on the profile page. Leave a blank line between paragraphs.' }),

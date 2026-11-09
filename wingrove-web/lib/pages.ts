@@ -205,6 +205,8 @@ export type Person = {
   role?: string
   group: 'leadership' | 'advancement' | 'founder' | 'advisor'
   order: number
+  /** Set when someone outside Leadership also appears in Founding Leadership, at this position. */
+  leadershipOrder?: number | null
   photo?: string | null
   shortBio?: string
   quote?: string
@@ -242,8 +244,8 @@ export const peopleDefaults: Person[] = [
   P('Dr. Nicole Assisi', 'nicole-assisi', 'leadership', 40, 'Senior Advisor'),
   P('Edward Huang', 'edward-huang', 'leadership', 50, 'Chief Innovation Officer'),
   P('Jason Zubatkin', 'jason-zubatkin', 'leadership', 60, 'Managing Director, Design & Construction'),
-  P('Chrissi Rawak', 'chrissi-rawak', 'advancement', 110, 'Managing Director, Advancement & Organizational Excellence'),
-  P('Amanda Hoskins', 'amanda-hoskins', 'advancement', 120, 'Director, Data Strategy & Operations'),
+  { ...P('Chrissi Rawak', 'chrissi-rawak', 'advancement', 110, 'Managing Director, Advancement & Organizational Excellence'), leadershipOrder: 55 },
+  { ...P('Amanda Hoskins', 'amanda-hoskins', 'advancement', 120, 'Director, Data Strategy & Operations'), leadershipOrder: 65 },
   P('Shannan Brown', 'shannan-brown', 'advancement', 130),
   P('Ashley Stone', 'ashley-stone', 'advancement', 140),
   P('Jeff Foss', 'jeff-foss', 'advancement', 150),
@@ -253,7 +255,7 @@ export const peopleDefaults: Person[] = [
 ]
 
 const PEOPLE_Q = `*[_type == "person" && (!defined(access) || access == "public")] | order(order asc){
-  name, "slug": slug.current, role, group, order, shortBio, quote, "photo": photo.asset->url
+  name, "slug": slug.current, role, group, order, leadershipOrder, shortBio, quote, "photo": photo.asset->url
 }`
 
 export async function getPeople(): Promise<Person[]> {
@@ -266,6 +268,12 @@ export async function getVisiblePeople(): Promise<Person[]> {
   const [people, s] = await Promise.all([getPeople(), doc('teamPage')])
   return s.showLeadership === true ? people : people.filter((p) => p.group === 'advancement')
 }
+
+/** Founding Leadership: the Leadership group plus anyone given a leadership position, in that order. */
+export const leadershipList = (people: Person[]) =>
+  people
+    .filter((p) => p.group !== 'advancement' || typeof p.leadershipOrder === 'number')
+    .sort((a, b) => (a.leadershipOrder ?? a.order) - (b.leadershipOrder ?? b.order))
 
 export async function getPerson(slug: string) {
   return (await getVisiblePeople()).find((p) => p.slug === slug) || null

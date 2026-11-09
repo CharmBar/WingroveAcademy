@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import { GivingBand, PageHero } from '@/components/Blocks'
 import { PersonCard } from '@/components/Person'
-import { getTeam, getVisiblePeople } from '@/lib/pages'
+import { getTeam, getVisiblePeople, leadershipList } from '@/lib/pages'
 
 export const revalidate = 60
 export const metadata: Metadata = { title: 'The Visionaries', description: 'The founders and team building Wingrove Academy.' }
 
 export default async function VisionariesPage() {
   const [t, people] = await Promise.all([getTeam(), getVisiblePeople()])
-  const leaders = t.showLeadership ? people.filter((p) => p.group !== 'advancement') : []
+  const leaders = t.showLeadership ? leadershipList(people) : []
   const advancement = t.showAdvancement ? people.filter((p) => p.group === 'advancement') : []
   return (
     <>
