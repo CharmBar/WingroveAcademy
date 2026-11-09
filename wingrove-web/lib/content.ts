@@ -13,7 +13,7 @@ const PILLAR_IMAGES: [RegExp, string, string][] = [
   [/excellence|purpose/i, 'upper-commons', 'Students gathered on the stepped seating of the Upper School commons'],
   [/curriculum/i, 'classroom', 'Students working through problems at the whiteboard in an exchange classroom'],
   [/talent|teacher|educator/i, 'campus-walk-2', 'A teacher talking with students along the bright second-floor walkway'],
-  [/global|world/i, 'innovation-commons', 'Students meeting in the Innovation Center commons'],
+  [/global|connectivity/i, 'innovation-commons', 'Students meeting in the Innovation Center commons'],
   [/time|schedule/i, 'innovation-workshop', 'Students deep in project work in the Innovation Center workshop'],
   [/wellbeing|health/i, 'dining', 'Students relaxing on the lawn of the dining courtyard'],
   [/campus|third teacher|nature/i, 'campus', 'Illustrated aerial view of the campus lakes, buildings and fields'],
