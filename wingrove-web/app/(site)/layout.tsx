@@ -47,14 +47,13 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             {/* The Q&A service isn't open yet */}
             <p className="answerer__soon">
               {s.answererStatus}
-              <svg className="answerer__chev" viewBox="0 0 30 28" aria-hidden="true">
-                <path d="M3 2C9 6 12 10 13 14C12 18 9 22 3 26" />
-                <path d="M14 2C20 6 23 10 24 14C23 18 20 22 14 26" />
+              <svg className="answerer__chev" viewBox="0 0 22 20" aria-hidden="true">
+                <path d="M3 3l7 7-7 7M11 3l7 7-7 7" />
               </svg>
             </p>
           </div>
           <div>
-            <p style={{ margin: 0, color: 'var(--white)' }}>Questions? Contact us</p>
+            <p className="foot__head">Questions? Contact us</p>
             <p style={{ marginTop: '.3em' }}>
               <a href={`mailto:${s.contactEmail}`}>{s.contactEmail}</a>
             </p>
