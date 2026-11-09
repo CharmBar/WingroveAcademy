@@ -43,6 +43,8 @@ const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; captio
 
 /* ---------------- The Learning Experience ---------------- */
 
+export type Division = { name: string; grades: string; stage: string; focus: string; body: string }
+
 export const learningDefaults = {
   heroEyebrow: 'The Learning Experience',
   heroTitle: 'The Time and Space to Pursue Excellence',
@@ -52,10 +54,14 @@ export const learningDefaults = {
   introBody:
     'Whether launching a business, conducting research, competing on the world stage, or creating something entirely new, every student is supported in discovering their strengths and turning them into impact.',
   divisionsTitle: 'Lower, Middle, and Upper School',
-  divisionsBody: 'Distinct Lower, Middle, and Upper School models will guide students from supported inquiry toward greater intellectual independence, agency, and responsibility.',
-  divisions: ['Lower School', 'Middle School', 'Upper School'],
-  divisionsFrom: 'Supported inquiry',
-  divisionsTo: 'Independence, agency, and responsibility',
+  divisionsSubtitle: 'From Curiosity to Mastery. From Discovery to Distinction.',
+  divisionsBody:
+    'Wingrove’s Lower, Middle, and Upper Schools are designed as one connected journey. Each division builds on the foundations of the last while responding to the distinct developmental needs of its students. The progression is deliberate: discover and explore, develop and apply, distinguish and contribute.',
+  divisionCards: [
+    { name: 'Lower School', grades: 'PK–4', stage: 'Discover', focus: 'Curiosity, Exploration & Foundations', body: 'Establish a love of learning through joyful discovery, strong foundations, creative expression, and the confidence to explore new ideas.' },
+    { name: 'Middle School', grades: '5–8', stage: 'Develop', focus: 'Inquiry, Application & Agency', body: 'Deepen understanding through interdisciplinary inquiry, authentic problem-solving, and growing ownership of learning, interests, and responsibilities.' },
+    { name: 'Upper School', grades: '9–12', stage: 'Distinguish', focus: 'Mastery, Purpose & Impact', body: 'Pursue intellectual depth and individual distinction through advanced scholarship, original work, and purposeful contributions beyond the classroom.' },
+  ] as Division[],
   timeTitle: 'Time Advantage',
   timeBody:
     'At Wingrove, the schedule conforms to the learning. Time is a design resource, and we build the day, the week, and the year around what learning requires: depth, agency, and room to go further.',
@@ -98,9 +104,8 @@ export async function getLearning() {
     introBody: t('introBody'),
     divisionsTitle: t('divisionsTitle'),
     divisionsBody: t('divisionsBody'),
-    divisions: pick(s.divisions as string[], d.divisions),
-    divisionsFrom: t('divisionsFrom'),
-    divisionsTo: t('divisionsTo'),
+    divisionsSubtitle: t('divisionsSubtitle'),
+    divisionCards: pick(s.divisionCards as Division[], d.divisionCards),
     timeTitle: t('timeTitle'),
     timeBody: t('timeBody'),
     timeItems: pick(s.timeItems as string[], d.timeItems),

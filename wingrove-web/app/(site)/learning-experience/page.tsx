@@ -25,16 +25,20 @@ export default async function LearningPage() {
         <div className="wrap">
           <h2 className="h2">{l.divisionsTitle}</h2>
           <hr className="rule rule--green" />
+          <p className="path__sub">{l.divisionsSubtitle}</p>
           <p className="section-lead">{l.divisionsBody}</p>
-          <ol className="path__steps" aria-label="School divisions in order">
-            {l.divisions.map((d) => (
-              <li key={d}>{d}</li>
+          <ol className="path__cards" aria-label="School divisions in order">
+            {l.divisionCards.map((d) => (
+              <li key={d.name}>
+                <h3>{d.name}</h3>
+                <p className="path__meta">
+                  Grades {d.grades} <span aria-hidden="true">·</span> {d.stage}
+                </p>
+                <p className="path__focus">{d.focus}</p>
+                <p>{d.body}</p>
+              </li>
             ))}
           </ol>
-          <div className="path__ends" aria-hidden="true">
-            <span>{l.divisionsFrom}</span>
-            <span>{l.divisionsTo}</span>
-          </div>
         </div>
       </section>
 
