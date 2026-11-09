@@ -497,14 +497,14 @@ a{color:inherit}
 .found-stats__list li+li{border-left:1px solid rgba(255,255,255,.35)}
 .found-stats__list strong{font-family:var(--body);font-weight:500;font-size:clamp(28px,3.2vw,42px);letter-spacing:.04em;text-transform:uppercase;color:var(--gold);line-height:1.1}
 .found-stats__list span{font-size:15px;color:var(--mist)}
-.found-gift{background:var(--ink);color:var(--white);padding-block:clamp(72px,9vw,128px)}
+.found-gift{background:var(--ink);color:var(--white);padding-block:clamp(56px,7vw,96px)}
 .found-gift .wrap{max-width:900px}
 .found-gift__head{text-align:center;max-width:620px;margin:0 auto}
 .found-gift__head .h2{color:var(--white)}
 .found-gift__head .rule{margin-inline:auto}
 .found-gift__head p{margin:0;color:var(--mist)}
 .found-gift__card{margin-top:clamp(32px,4vw,48px);background:var(--white);border:8px solid var(--blue);padding:clamp(24px,4vw,48px)}
-.found-other{margin-top:clamp(28px,3vw,40px);background:var(--blue);border:8px solid #234C88;padding:clamp(28px,4vw,48px);text-align:center}
+.found-other{margin-top:0;background:var(--blue);border:8px solid #234C88;padding:clamp(28px,4vw,48px);text-align:center}
 .found-other h3{font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:0 0 .4em}
 .found-other .rule{margin-inline:auto}
 .found-other p{margin:0 auto;max-width:52ch;color:var(--white)}

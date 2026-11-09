@@ -63,16 +63,25 @@ export default async function FoundingOpportunityPage() {
         </div>
       </section>
 
-      <section className="band found-gift" id="give">
+      <section className="band updates" id="give">
         <div className="wrap">
-          <div className="found-gift__head">
-            <h2 className="h2">{g.giftTitle}</h2>
-            <hr className="rule" />
+          <div>
+            <div className="eyebrow">{g.giftEyebrow}</div>
+            <h3>{g.giftTitle}</h3>
+            <p className="sub">{g.giftSubtitle}</p>
             <p>{g.giftBody}</p>
+            <ul className="perks">
+              {g.giftPerks.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
           </div>
-          <div className="found-gift__card">
-            <InsiderForm button={g.formButton} defaultRole="Donor or partner" />
-          </div>
+          <InsiderForm button={g.formButton} defaultRole="Donor or partner" />
+        </div>
+      </section>
+
+      <section className="band found-gift">
+        <div className="wrap">
           <div className="found-other">
             <h3>{g.otherTitle}</h3>
             <hr className="rule rule--gold" />
