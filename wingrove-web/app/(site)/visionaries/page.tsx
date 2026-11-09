@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { InsiderBand, PageHero } from '@/components/Blocks'
+import { GivingBand, PageHero } from '@/components/Blocks'
 import { PersonCard } from '@/components/Person'
 import { getTeam, getVisiblePeople } from '@/lib/pages'
 
@@ -49,7 +49,7 @@ export default async function VisionariesPage() {
           </section>
         ) : null,
       )}
-      <InsiderBand />
+      <GivingBand eyebrow={t.givingEyebrow} title={t.givingTitle} body={t.givingBody} button={t.givingButton} href={t.givingHref} />
     </>
   )
 }

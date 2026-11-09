@@ -280,6 +280,11 @@ export const teamPage = defineType({
     text('leadershipIntro', 'Leadership intro', 2, 'body'),
     text('advancementTitle', 'Advancement heading', 1, 'body'),
     text('advancementIntro', 'Advancement intro', 2, 'body'),
+    text('givingEyebrow', 'Closing band: eyebrow', 1, 'body'),
+    text('givingTitle', 'Closing band: title', 2, 'body'),
+    paras('givingBody', 'Closing band: text', 'body'),
+    text('givingButton', 'Closing band: button', 1, 'body'),
+    text('givingHref', 'Closing band: button link', 1, 'body'),
   ],
   preview: { prepare: () => ({ title: 'The Visionaries' }) },
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const ROLES = ['Prospective family', 'Donor or partner', 'Prospective faculty or staff', 'Member of the community']
 
@@ -9,6 +9,12 @@ export default function InsiderForm({ button }: { button: string }) {
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
+  const [role, setRole] = useState(ROLES[0])
+
+  // ?interest=donor (from "Shape the Future of the School") pre-selects Donor or partner
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('interest') === 'donor') setRole('Donor or partner')
+  }, [])
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -51,7 +57,7 @@ export default function InsiderForm({ button }: { button: string }) {
       </label>
       <label className="full" htmlFor="f-role">
         I am a
-        <select id="f-role" name="role" disabled={done}>
+        <select id="f-role" name="role" disabled={done} value={role} onChange={(e) => setRole(e.target.value)}>
           {ROLES.map((r) => (
             <option key={r}>{r}</option>
           ))}

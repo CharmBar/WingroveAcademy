@@ -216,6 +216,14 @@ export const teamDefaults = {
   leadershipIntro: 'The ElevateED team designing Wingrove’s academic model, campus, and organization.',
   advancementTitle: 'Advancement',
   advancementIntro: 'The team building the community of families, donors, and partners behind Wingrove.',
+  givingEyebrow: 'Advancement',
+  givingTitle: 'Commitment from this community. Opportunity for generations to come.',
+  givingBody: [
+    'A school like Wingrove doesn’t just appear. It’s built—step by step, gift by gift—by a community that believes every child deserves a place to grow, to learn, and to flourish.',
+    'The future of education is being written now. With your support, it will soar at Wingrove Academy.',
+  ],
+  givingButton: 'Shape the Future of the School',
+  givingHref: '/?interest=donor#updates',
 }
 
 const P = (name: string, slug: string, group: Person['group'], order: number, role?: string): Person => ({ name, slug, group, order, role })
@@ -271,5 +279,10 @@ export async function getTeam() {
     leadershipIntro: t('leadershipIntro'),
     advancementTitle: t('advancementTitle'),
     advancementIntro: t('advancementIntro'),
+    givingEyebrow: t('givingEyebrow'),
+    givingTitle: t('givingTitle'),
+    givingBody: pick(s.givingBody as string[], d.givingBody),
+    givingButton: t('givingButton'),
+    givingHref: t('givingHref'),
   }
 }

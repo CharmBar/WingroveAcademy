@@ -39,6 +39,32 @@ export function Gallery({ title, items }: { title: string; items: Pic[] }) {
   )
 }
 
+/** Closing call to support Wingrove, with the enlarged Wingrove mark behind it. */
+export function GivingBand({ eyebrow, title, body, button, href }: { eyebrow: string; title: string; body: string[]; button: string; href: string }) {
+  return (
+    <section className="band giving">
+      <img className="giving__mark" src="/brand/crest-white.png" alt="" aria-hidden="true" />
+      <div className="wrap giving__grid">
+        <div>
+          <div className="eyebrow">{eyebrow}</div>
+          <h2 className="giving__title">{title}</h2>
+        </div>
+        <div>
+          <hr className="rule rule--gold" />
+          {body.map((p, i) => (
+            <p key={i} className={i === 0 ? 'giving__lead' : undefined}>
+              {p}
+            </p>
+          ))}
+          <a className="btn" href={href}>
+            {button}
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export function InsiderBand() {
   return (
     <section className="band insider-band">
