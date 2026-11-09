@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { InsiderBand } from '@/components/Blocks'
 import { Portrait } from '@/components/Person'
-import { getPeople, getPerson } from '@/lib/pages'
+import { getPerson, getVisiblePeople } from '@/lib/pages'
 
 export const revalidate = 60
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  return (await getPeople()).map((p) => ({ slug: p.slug }))
+  return (await getVisiblePeople()).map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -73,6 +73,7 @@ export default async function LearningPage() {
       </section>
 
       <section className="band statement">
+        <img className="statement__mark" src="/brand/crest-white.png" alt="" aria-hidden="true" />
         <div className="wrap">
           <div className="eyebrow">{l.curriculumTitle}</div>
           <p className="statement__text">{l.curriculumBody}</p>

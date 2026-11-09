@@ -124,6 +124,11 @@ export const campusDefaults = {
     { value: 'PK–12', label: 'Lower, Middle, and Upper School' },
     { value: 'Fall 2029', label: 'Opening' },
   ],
+  regionTitle: 'South Florida is in the midst of a once-in-a-generation transformation.',
+  regionBody: [
+    'Palm Beach County is growing and needs a top-tier school to serve families who value excellence and possibility for their children. The opportunity is not to replicate what exists, but to improve it and build a school that redefines what excellence means.',
+    'Wingrove Academy is the next generation of world-class education, bringing together leaders with unrivaled expertise in designing and launching schools of global stature. We are building a school that delivers both excellence and purpose, academic distinction and human development.',
+  ],
   storyTitle: 'Creating the Epicenter for Innovation and Excellence',
   storyBody: [
     'Wingrove Academy’s sustainable campus is purpose-built to support how students learn best, through exploration, creation, and connection. Designed by internationally acclaimed architects, the campus integrates classrooms, labs, and studios with open green spaces, encouraging collaboration, movement, and discovery throughout the day.',
@@ -171,6 +176,8 @@ export async function getCampus() {
     heroTitle: t('heroTitle'),
     heroLead: t('heroLead'),
     facts: pick(s.facts as { value: string; label: string }[], d.facts),
+    regionTitle: t('regionTitle'),
+    regionBody: pick(s.regionBody as string[], d.regionBody),
     storyTitle: t('storyTitle'),
     storyBody: pick(s.storyBody as string[], d.storyBody),
     planTitle: t('planTitle'),
@@ -204,6 +211,7 @@ export const teamDefaults = {
     'Wingrove Academy is being built by people who have done this before, at the highest levels, at the institutions that set the standard. That expertise comes from Karen Yung and the team she has assembled at ElevateED to build and support Wingrove.',
     'Our team has designed and led Avenues: The World School in New York, Green School in Bali, Dulwich College International across Asia, and Da Vinci Schools in Los Angeles. They have taught at High Tech High and the University of Cambridge, led major philanthropic campaigns, and scaled talent infrastructure at Teach for America. Our athletics program is being designed by leaders from the University of Delaware and Iowa State. Our construction team has overseen capital projects at The Dalton School and Horace Mann.',
   ],
+  showLeadership: false,
   leadershipTitle: 'Founding Leadership',
   leadershipIntro: 'The ElevateED team designing Wingrove’s academic model, campus, and organization.',
   advancementTitle: 'Advancement',
@@ -238,8 +246,14 @@ export async function getPeople(): Promise<Person[]> {
   return rows?.length ? rows.filter((p) => p.slug) : peopleDefaults
 }
 
+/** People shown on the site: the leadership group only when The Visionaries page has it switched on. */
+export async function getVisiblePeople(): Promise<Person[]> {
+  const [people, s] = await Promise.all([getPeople(), doc('teamPage')])
+  return s.showLeadership === true ? people : people.filter((p) => p.group === 'advancement')
+}
+
 export async function getPerson(slug: string) {
-  return (await getPeople()).find((p) => p.slug === slug) || null
+  return (await getVisiblePeople()).find((p) => p.slug === slug) || null
 }
 
 export async function getTeam() {
@@ -252,6 +266,7 @@ export async function getTeam() {
     heroTitle: t('heroTitle'),
     heroLead: t('heroLead'),
     body: pick(s.body as string[], d.body),
+    showLeadership: s.showLeadership === true,
     leadershipTitle: t('leadershipTitle'),
     leadershipIntro: t('leadershipIntro'),
     advancementTitle: t('advancementTitle'),

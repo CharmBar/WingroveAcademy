@@ -25,6 +25,18 @@ export default async function CampusPage() {
         </div>
       </section>
 
+      <section className="band region">
+        <div className="wrap region__grid">
+          <h2 className="region__title">{c.regionTitle}</h2>
+          <div>
+            <hr className="rule rule--gold" />
+            {c.regionBody.map((p) => (
+              <p key={p.slice(0, 24)}>{p}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="band story">
         <div className="wrap story__grid">
           <h2 className="h2">{c.storyTitle}</h2>

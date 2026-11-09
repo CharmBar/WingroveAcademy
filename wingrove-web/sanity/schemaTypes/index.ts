@@ -227,6 +227,8 @@ export const campusPage = defineType({
       group: 'body',
       of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'value', type: 'string' }), defineField({ name: 'label', type: 'string' })], preview: { select: { title: 'value', subtitle: 'label' } } })],
     }),
+    text('regionTitle', 'South Florida title', 2, 'body'),
+    paras('regionBody', 'South Florida text', 'body'),
     text('storyTitle', 'Story title', 1, 'body'),
     paras('storyBody', 'Story', 'body'),
     text('planTitle', 'Plan title', 1, 'plan'),
@@ -266,6 +268,7 @@ export const teamPage = defineType({
   fields: [
     ...hero(),
     paras('body', 'Introduction', 'body'),
+    defineField({ name: 'showLeadership', title: 'Show Founding Leadership', type: 'boolean', group: 'body', initialValue: false, description: 'Off: only the Advancement team (and their profiles) appear on the site.' }),
     text('leadershipTitle', 'Leadership heading', 1, 'body'),
     text('leadershipIntro', 'Leadership intro', 2, 'body'),
     text('advancementTitle', 'Advancement heading', 1, 'body'),
