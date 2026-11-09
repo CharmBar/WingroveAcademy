@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getSettings } from '@/lib/content'
 import ScrollEffects from '@/components/ScrollEffects'
 import MobileMenu from '@/components/MobileMenu'
+import GoogleTag from '@/components/GoogleTag'
 
 const LINKS = [
   { href: '/#welcome', label: 'Welcome' },
@@ -75,6 +76,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
       </footer>
       <ScrollEffects />
+      <GoogleTag />
     </>
   )
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import GoogleTag from '@/components/GoogleTag'
 
 export const metadata: Metadata = {
   title: 'Wingrove Academy · Preview access',
@@ -29,6 +30,7 @@ export default async function GatePage({ searchParams }: { searchParams: Promise
           </p>
         )}
       </div>
+      <GoogleTag />
     </main>
   )
 }
