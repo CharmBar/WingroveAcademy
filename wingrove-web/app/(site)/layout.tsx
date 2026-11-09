@@ -3,6 +3,7 @@ import { getSettings } from '@/lib/content'
 import ScrollEffects from '@/components/ScrollEffects'
 import MobileMenu from '@/components/MobileMenu'
 import GoogleTag from '@/components/GoogleTag'
+import CookieBanner, { CookiePrefsLink } from '@/components/CookieBanner'
 
 const LINKS = [
   { href: '/#welcome', label: 'Welcome' },
@@ -71,12 +72,15 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <p className="small">
               Instagram {s.instagram} &nbsp;·&nbsp; LinkedIn {s.linkedin}
             </p>
-            <p className="small">Privacy Policy</p>
+            <p className="small">
+              <a href="/privacy-policy">Privacy Policy</a> &nbsp;·&nbsp; <CookiePrefsLink />
+            </p>
           </div>
         </div>
       </footer>
       <ScrollEffects />
       <GoogleTag />
+      <CookieBanner />
     </>
   )
 }

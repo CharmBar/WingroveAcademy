@@ -290,5 +290,20 @@ export const teamPage = defineType({
   preview: { prepare: () => ({ title: 'The Visionaries' }) },
 })
 
-export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, person]
+export const page = defineType({
+  name: 'page',
+  title: 'Page',
+  type: 'document',
+  description: 'Simple text pages such as the Privacy Policy, shown at /<slug>.',
+  fields: [
+    defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required() }),
+    defineField({ name: 'eyebrow', type: 'string' }),
+    defineField({ name: 'intro', type: 'text', rows: 2 }),
+    defineField({ name: 'body', type: 'array', of: [defineArrayMember({ type: 'block' })] }),
+  ],
+  preview: { select: { title: 'title', subtitle: 'slug.current' } },
+})
+
+export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, person, page]
 export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage'])

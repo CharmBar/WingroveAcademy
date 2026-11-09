@@ -1,18 +1,15 @@
 import Script from 'next/script'
+import { GTM_ID, consentDefaultsScript } from '@/lib/consent'
 
-/** Google Tag Manager container for Wingrove Academy. Override with NEXT_PUBLIC_GTM_ID; set it to "off" to disable. */
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-NDQQWLPC'
-
+/** Consent defaults, then Google Tag Manager. Set NEXT_PUBLIC_GTM_ID to "off" to disable. */
 export default function GoogleTag() {
   if (!GTM_ID || GTM_ID === 'off') return null
   return (
     <>
+      {/* Must run before Tag Manager loads */}
+      <script id="consent-defaults" dangerouslySetInnerHTML={{ __html: consentDefaultsScript }} />
       <Script id="gtm" strategy="afterInteractive">
-        {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-(function(d,s,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(document,'script','${GTM_ID}');`}
+        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`}
       </Script>
       <noscript>
         <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} title="Google Tag Manager" />
