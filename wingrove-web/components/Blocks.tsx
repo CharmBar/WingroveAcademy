@@ -18,6 +18,18 @@ export function PageHero({ image, eyebrow, title, lead }: { image: Pic; eyebrow:
   )
 }
 
+/**
+ * The grid is three across, with the first image filling a 2×2 block. Any count that would leave the
+ * last row part-empty spreads that row out: two images share it half and half, a single one runs full width.
+ */
+const tail = (i: number, n: number) => {
+  if (n < 4) return ''
+  const rem = n % 3
+  if (rem === 2 && i >= n - 2) return ' gallery__item--half'
+  if (rem === 1 && i === n - 1) return ' gallery__item--full'
+  return ''
+}
+
 export function Gallery({ title, items }: { title: string; items: Pic[] }) {
   return (
     <section className="band gallery">
@@ -26,7 +38,7 @@ export function Gallery({ title, items }: { title: string; items: Pic[] }) {
         <hr className="rule rule--gold" />
         <div className="gallery__grid">
           {items.map((g, i) => (
-            <figure className={`gallery__item${i === 0 ? ' gallery__item--wide' : ''}`} key={`${g.src}-${i}`}>
+            <figure className={`gallery__item${i === 0 ? ' gallery__item--wide' : ''}${tail(i, items.length)}`} key={`${g.src}-${i}`}>
               <div className="gallery__frame">
                 <img src={g.src} srcSet={g.srcSet} sizes={i === 0 ? '(max-width:880px) 92vw, 66vw' : '(max-width:880px) 92vw, 33vw'} alt={g.alt} loading="lazy" />
               </div>
