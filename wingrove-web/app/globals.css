@@ -205,7 +205,8 @@ a{color:inherit}
   .hdr__nav{gap:14px}
   .hdr{gap:12px}
   .hdr>a:first-child{margin-right:auto}
-  .burger{pointer-events:auto;filter:drop-shadow(0 1px 6px rgba(12,34,64,.45));display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:0 10px;border:0;background:none;color:var(--white);cursor:pointer;position:relative;z-index:61}
+  /* Fades in with the logo and CTA once the visitor scrolls past the opening */
+  .burger{opacity:var(--hdr-ui,0);transform:translateY(calc((1 - var(--hdr-ui,0)) * -8px));pointer-events:auto;filter:drop-shadow(0 1px 6px rgba(12,34,64,.45));display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:0 10px;border:0;background:none;color:var(--white);cursor:pointer;position:relative;z-index:61}
   .burger span{display:block;height:2px;width:100%;background:currentColor;transition:transform .3s ease,opacity .2s ease}
   .menu-open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   .menu-open .burger span:nth-child(2){opacity:0}
@@ -222,6 +223,8 @@ a{color:inherit}
 .menu-open,.menu-open body{overflow:hidden}
 .menu-open .hdr{--hdr-ui:1!important;--hdr-logo:1!important;--hdr-bg:0!important;z-index:62;pointer-events:auto}
 .menu-open .hdr .hdr__cta{display:none}
+.hdr.is-locked .burger{pointer-events:none}
+.menu-open .hdr .burger{opacity:1;transform:none;pointer-events:auto}
 @media (max-width:880px){
   .hdr{height:64px}
   .hdr__logo{height:26px}
