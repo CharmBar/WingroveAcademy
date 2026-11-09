@@ -181,7 +181,8 @@ const galleryField = (group?: string) =>
     name: 'gallery',
     type: 'array',
     group,
-    of: [defineArrayMember({ type: 'object', fields: [img('image', 'Image'), defineField({ name: 'caption', type: 'string' })], preview: { select: { title: 'caption', media: 'image' } } })],
+    description: 'In display order. Leave an image empty to keep the current rendering in that position.',
+    of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'caption', type: 'string' }), img('image', 'Image')], preview: { select: { title: 'caption', media: 'image' } } })],
   })
 const hero = (group = 'hero') => [
   { ...img('heroImage', 'Hero image'), group },

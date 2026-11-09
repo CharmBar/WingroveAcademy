@@ -31,8 +31,15 @@ async function fetchQuery<T>(query: string, params: Record<string, unknown> = {}
 const doc = async (id: string) => (await fetchQuery<Record<string, any>>(`*[_id == $id][0]`, { id })) || {}
 
 type GalleryItem = { image?: Img; caption?: string }
-const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; caption: string; alt: string }[]): Pic[] =>
-  items?.length ? items.map((g) => pic(g.image, 'campus', g.image?.alt || g.caption || '', g.caption, 1600)) : d.map((g) => pic(undefined, g.fallback, g.alt, g.caption, 1600))
+/** Gallery items from the Studio, matched by position to the default renderings: a caption or image left empty keeps the default. */
+const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; caption: string; alt: string }[]): Pic[] => {
+  const list = items?.length ? items : d.map(() => ({}) as GalleryItem)
+  return list.map((g, i) => {
+    const def = d[i] || d[i % d.length]
+    const caption = g.caption || def.caption
+    return pic(g.image, def.fallback, g.image?.alt || def.alt, caption, 1600)
+  })
+}
 
 /* ---------------- The Learning Experience ---------------- */
 
@@ -159,7 +166,7 @@ export const campusDefaults = {
     { fallback: 'dining', caption: 'Dining Courtyard', alt: 'Students on the lawn of the dining courtyard under a large shade tree' },
     { fallback: 'courtyard', caption: 'Performing Arts Courtyard', alt: 'Performing arts courtyard lawn with the observatory dome beyond' },
     { fallback: 'campus-walk-2', caption: 'Campus Walk, Second Floor', alt: 'Students and a teacher along the bright second-floor walkway' },
-    { fallback: 'axon', caption: 'Overall Axon', alt: 'Axonometric model of the main academic buildings' },
+    { fallback: 'axon', caption: 'Innovation Center', alt: 'Model view of the Innovation Center and the academic buildings around it' },
     { fallback: 'commons', caption: 'Middle School Commons', alt: 'Students on the stepped wooden seating of the Middle School commons' },
   ],
   closing: 'Opening in Fall 2029, the campus is conceived as an enduring educational and civic anchor, enriching Palm Beach County through learning, culture, and community connection.',
