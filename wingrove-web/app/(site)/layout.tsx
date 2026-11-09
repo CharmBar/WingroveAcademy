@@ -49,10 +49,23 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             </p>
             <p className="small">Privacy Policy</p>
           </div>
-          <div>
-            <p className="small" style={{ margin: 0 }}>
-              {s.credit}
-            </p>
+          <div className="answerer" aria-labelledby="answerer-title">
+            <div className="answerer__head">
+              <p className="answerer__title" id="answerer-title">
+                {s.answererTitle}
+              </p>
+              <span className="answerer__badge">{s.answererStatus}</span>
+            </div>
+            <p className="answerer__text">{s.answererText}</p>
+            {/* Placeholder only: the Q&A service isn't connected yet */}
+            <div className="answerer__box" aria-hidden="true">
+              <span>Ask a question about Wingrove…</span>
+              <span className="answerer__send">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </div>
           </div>
         </div>
       </footer>

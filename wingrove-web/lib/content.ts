@@ -44,6 +44,9 @@ export const defaults = {
     instagram: '/wingroveacademy',
     linkedin: '/wingroveacademyofficial',
     credit: 'Renderings: Efficiency Lab for Architecture PLLC © 2026',
+    answererTitle: 'Wingrove Answerer',
+    answererStatus: 'Coming soon',
+    answererText: 'For people who want to understand the why behind the design, how the school will operate, and what “Where Excellence Finds Purpose” means in practice.',
   },
   home: {
     openingLine: 'Village of Wellington, FL · Opening Fall 2029',
@@ -115,6 +118,9 @@ export async function getSettings() {
     instagram: pick(s.instagram, d.instagram),
     linkedin: pick(s.linkedin, d.linkedin),
     credit: pick(s.credit, d.credit),
+    answererTitle: pick((s as any).answererTitle, d.answererTitle),
+    answererStatus: pick((s as any).answererStatus, d.answererStatus),
+    answererText: pick((s as any).answererText, d.answererText),
     ogImage: imageUrl(s.ogImage, 1200, 630),
   }
 }
