@@ -198,9 +198,31 @@ a{color:inherit}
 .foot .proto{display:inline-block;margin-top:14px;border:1px solid #3C5670;padding:6px 10px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#A9BBC9}
 
 /* ---------- Narrow screens ---------- */
-@media (max-width:1180px){.hdr__nav a:not(.btn){display:none}}
+/* Tablets and phones: links move into the menu */
+.burger{display:none}
+@media (max-width:1180px){
+  .hdr__nav .hdr__link{display:none}
+  .hdr__nav{gap:14px}
+  .hdr{gap:12px}
+  .hdr>a:first-child{margin-right:auto}
+  .burger{pointer-events:auto;filter:drop-shadow(0 1px 6px rgba(12,34,64,.45));display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:0 10px;border:0;background:none;color:var(--white);cursor:pointer;position:relative;z-index:61}
+  .burger span{display:block;height:2px;width:100%;background:currentColor;transition:transform .3s ease,opacity .2s ease}
+  .menu-open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .menu-open .burger span:nth-child(2){opacity:0}
+  .menu-open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+}
+@media (max-width:560px){.hdr__cta{display:none}}
+.mmenu{position:fixed;inset:0;z-index:60;background:var(--navy);color:var(--white);overflow-y:auto;
+  padding:calc(96px + env(safe-area-inset-top,0px)) max(28px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) max(28px,env(safe-area-inset-left,0px))}
+.mmenu ul{list-style:none;margin:0 0 36px;padding:0;display:grid;gap:4px}
+.mmenu li a{display:block;padding:10px 0;font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(30px,7vw,44px);line-height:1.15;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.12)}
+.mmenu li a:hover{color:var(--gold)}
+.mmenu .mmenu__cta{display:inline-flex}
+/* While the menu is open: keep the header usable above it and stop the page scrolling behind */
+.menu-open,.menu-open body{overflow:hidden}
+.menu-open .hdr{--hdr-ui:1!important;--hdr-logo:1!important;--hdr-bg:0!important;z-index:62;pointer-events:auto}
+.menu-open .hdr .hdr__cta{display:none}
 @media (max-width:880px){
-  .hdr__nav a:not(.btn){display:none}
   .hdr{height:64px}
   .hdr__logo{height:26px}
   .btn{padding:10px 14px;font-size:11px}

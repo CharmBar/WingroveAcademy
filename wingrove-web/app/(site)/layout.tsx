@@ -1,6 +1,15 @@
 import type { Metadata } from 'next'
 import { getSettings } from '@/lib/content'
 import ScrollEffects from '@/components/ScrollEffects'
+import MobileMenu from '@/components/MobileMenu'
+
+const LINKS = [
+  { href: '/#welcome', label: 'Welcome' },
+  { href: '/#distinct', label: 'Why Wingrove' },
+  { href: '/learning-experience', label: 'Learning Experience' },
+  { href: '/campus', label: 'The Campus' },
+  { href: '/visionaries', label: 'The Visionaries' },
+]
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings()
@@ -22,15 +31,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <img className="hdr__logo" id="hdrLogo" src="/brand/logo-white.png" alt={s.title} />
         </a>
         <nav className="hdr__nav" aria-label="Main">
-          <a href="/#welcome">Welcome</a>
-          <a href="/#distinct">Why Wingrove</a>
-          <a href="/learning-experience">Learning Experience</a>
-          <a href="/campus">The Campus</a>
-          <a href="/visionaries">The Visionaries</a>
-          <a className="btn" href="/#updates">
+          {LINKS.map((l) => (
+            <a key={l.href} className="hdr__link" href={l.href}>
+              {l.label}
+            </a>
+          ))}
+          <a className="btn hdr__cta" href="/#updates">
             {s.ctaLabel}
           </a>
         </nav>
+        <MobileMenu links={LINKS} cta={{ href: '/#updates', label: s.ctaLabel }} />
       </header>
       <main id="top">{children}</main>
       <footer className="band foot">
