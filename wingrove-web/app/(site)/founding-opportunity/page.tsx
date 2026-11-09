@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { InsiderBand, PageHero } from '@/components/Blocks'
+import { PageHero } from '@/components/Blocks'
 import InsiderForm from '@/components/InsiderForm'
 import { getGiving } from '@/lib/pages'
 
@@ -74,25 +74,14 @@ export default async function FoundingOpportunityPage() {
               {g.giftPerks.map((p) => (
                 <li key={p}>{p}</li>
               ))}
+              <li>
+                {g.otherBody} <a href={`mailto:${g.otherEmail}?subject=${encodeURIComponent('Founding gift to Wingrove Academy')}`}>{g.otherLinkLabel}</a>.
+              </li>
             </ul>
           </div>
           <InsiderForm button={g.formButton} defaultRole="Donor or partner" />
         </div>
       </section>
-
-      <section className="band found-gift">
-        <div className="wrap">
-          <div className="found-other">
-            <h3>{g.otherTitle}</h3>
-            <hr className="rule rule--gold" />
-            <p>
-              {g.otherBody} <a href={`mailto:${g.otherEmail}?subject=${encodeURIComponent('Founding gift to Wingrove Academy')}`}>{g.otherLinkLabel}</a>.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <InsiderBand />
     </>
   )
 }

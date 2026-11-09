@@ -326,10 +326,8 @@ export const givingDefaults = {
   giftPerks: [
     'Help attract the educators, programs, and campus that will define Wingrove',
     'Hear directly from the founders and advancement team shaping the school',
-    'Explore naming, recognition, and founding-family opportunities',
   ],
   formButton: 'Connect With Advancement',
-  otherTitle: 'Explore Other Ways to Give',
   otherBody: 'To discuss a multiyear pledge, a gift of appreciated stock, or naming and recognition opportunities,',
   otherLinkLabel: 'connect with our advancement team',
   otherEmail: 'info@wingroveacademy.org',
@@ -357,7 +355,6 @@ export async function getGiving() {
     giftPerks: pick(s.giftPerks as string[], d.giftPerks),
     giftBody: t('giftBody'),
     formButton: t('formButton'),
-    otherTitle: t('otherTitle'),
     otherBody: t('otherBody'),
     otherLinkLabel: t('otherLinkLabel'),
     otherEmail: t('otherEmail'),
