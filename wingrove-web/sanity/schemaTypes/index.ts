@@ -88,8 +88,12 @@ export const homePage = defineType({
       of: [
         defineArrayMember({
           type: 'object',
-          fields: [defineField({ name: 'label', type: 'string' }), defineField({ name: 'body', type: 'text', rows: 3 })],
-          preview: { select: { title: 'label', subtitle: 'body' } },
+          fields: [
+            defineField({ name: 'label', type: 'string' }),
+            defineField({ name: 'body', type: 'text', rows: 4 }),
+            img('image', 'Image', 'Shown beside this card. Leave empty to use a matching campus rendering.'),
+          ],
+          preview: { select: { title: 'label', subtitle: 'body', media: 'image' } },
         }),
       ],
     }),

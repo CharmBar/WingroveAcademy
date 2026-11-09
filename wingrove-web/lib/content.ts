@@ -5,7 +5,32 @@
 import { client, imageUrl, type SanityImage } from './sanity'
 
 type Img = SanityImage & { alt?: string }
-export type Pillar = { label: string; body: string }
+export type Pillar = { label: string; body: string; image?: Img }
+export type PillarCard = { label: string; body: string; src: string; srcSet?: string; alt: string }
+
+/** A rendering that suits each theme, used until an image is chosen in the Studio. */
+const PILLAR_IMAGES: [RegExp, string, string][] = [
+  [/excellence|purpose/i, 'upper-commons', 'Students gathered on the stepped seating of the Upper School commons'],
+  [/curriculum/i, 'classroom', 'Students working through problems at the whiteboard in an exchange classroom'],
+  [/talent|teacher|educator/i, 'campus-walk-2', 'A teacher talking with students along the bright second-floor walkway'],
+  [/global|world/i, 'innovation-commons', 'Students meeting in the Innovation Center commons'],
+  [/time|schedule/i, 'innovation-workshop', 'Students deep in project work in the Innovation Center workshop'],
+  [/wellbeing|health/i, 'dining', 'Students relaxing on the lawn of the dining courtyard'],
+  [/campus|third teacher|nature/i, 'campus', 'Illustrated aerial view of the campus lakes, buildings and fields'],
+  [/real-world|real world|challenge/i, 'workshop', 'Students building and testing ideas in the workshop'],
+  [/community|welcome|safety|respect/i, 'commons', 'Students gathered on the wooden steps of the Middle School commons'],
+  [/region|ecosystem|strengthen/i, 'arts-courtyard', 'The performing arts courtyard filled with students and visitors'],
+]
+const SPARE = ['courtyard', 'campus-walk', 'classroom-english', 'upper-commons']
+export function pillarCards(pillars: Pillar[]): PillarCard[] {
+  return pillars.map((p, i) => {
+    const up = imageUrl(p.image, 1600)
+    if (up) return { label: p.label, body: p.body, src: up, alt: p.image?.alt || p.label }
+    const hit = PILLAR_IMAGES.find(([re]) => re.test(p.label))
+    const name = hit?.[1] || SPARE[i % SPARE.length]
+    return { label: p.label, body: p.body, src: `/media/${name}.webp`, srcSet: `/media/${name}-sm.webp 1200w, /media/${name}.webp 2400w`, alt: hit?.[2] || '' }
+  })
+}
 export type Chapter = { eyebrow: string; title: string; body: string; linkLabel: string; href: string; image?: Img; fallback: string; alt: string }
 export type Scene = { caption: string; image?: Img; fallback: string }
 
@@ -129,7 +154,7 @@ export async function getHome() {
     welcomeNote: text('welcomeNote'),
     distinctTitle: text('distinctTitle'),
     distinctIntro: text('distinctIntro'),
-    pillars: pick(h.pillars as Pillar[], d.pillars),
+    pillars: pillarCards(pick(h.pillars as Pillar[], d.pillars)),
     visionQuote: text('visionQuote'),
     visionName: text('visionName'),
     visionRole: text('visionRole'),

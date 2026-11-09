@@ -1,4 +1,5 @@
 import InsiderForm from '@/components/InsiderForm'
+import PillarCarousel from '@/components/PillarCarousel'
 import { getHome, media } from '@/lib/content'
 import { imageUrl } from '@/lib/sanity'
 
@@ -78,14 +79,7 @@ export default async function Home() {
           <h3>{h.distinctTitle}</h3>
           <hr className="rule rule--green" />
           <p className="distinct__lead">{h.distinctIntro}</p>
-          <div className="pillars">
-            {h.pillars.map((p) => (
-              <div className="pillar" key={p.label}>
-                <div className="eyebrow">{p.label}</div>
-                <p>{p.body}</p>
-              </div>
-            ))}
-          </div>
+          <PillarCarousel items={h.pillars} />
         </div>
       </section>
 
