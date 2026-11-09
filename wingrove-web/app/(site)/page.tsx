@@ -37,7 +37,14 @@ export default async function Home() {
               <img className="w1" src="/brand/wingrove-white.png" alt="" />
               <img className="w2" src="/brand/academy-white.png" alt="" />
             </div>
-            <div className="lockup__date intro-fade intro-fade--late">{h.openingLine}</div>
+            <div className="lockup__date intro-fade intro-fade--late">
+              {h.openingLine.split(/\s+·\s+/).map((part, i) => (
+                <span key={i}>
+                  {i > 0 && <span className="lockup__sep"> · </span>}
+                  <span className="lockup__part">{part}</span>
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="line line--a" aria-hidden="true">
