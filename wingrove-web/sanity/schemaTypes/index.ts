@@ -290,6 +290,38 @@ export const teamPage = defineType({
   preview: { prepare: () => ({ title: 'The Visionaries' }) },
 })
 
+export const givingPage = defineType({
+  name: 'givingPage',
+  title: 'A Founding Opportunity',
+  type: 'document',
+  description: 'Donor page at /founding-opportunity. Not in the navigation; linked from the Advancement band on The Visionaries.',
+  groups: [{ name: 'hero', title: 'Hero', default: true }, { name: 'body', title: 'Sections' }],
+  fields: [
+    ...hero(),
+    paras('intro', 'Introduction', 'body'),
+    text('supportTitle', 'Support: heading', 1, 'body'),
+    { ...img('supportImage', 'Support: image'), group: 'body' },
+    labelled('supportItems', 'Support: items', 'body'),
+    text('statsTitle', 'Figures: heading', 1, 'body'),
+    { ...img('statsImage', 'Figures: background image', 'Shown under a blue tint.'), group: 'body' },
+    defineField({
+      name: 'stats',
+      title: 'Figures',
+      type: 'array',
+      group: 'body',
+      of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'value', type: 'string', description: 'e.g. $50.6 Million' }), defineField({ name: 'label', type: 'string' })], preview: { select: { title: 'value', subtitle: 'label' } } })],
+    }),
+    text('giftTitle', 'Gift: heading', 1, 'body'),
+    text('giftBody', 'Gift: text', 3, 'body'),
+    text('formButton', 'Form button', 1, 'body'),
+    text('otherTitle', 'Other ways to give: heading', 1, 'body'),
+    text('otherBody', 'Other ways to give: text (before the link)', 3, 'body'),
+    text('otherLinkLabel', 'Other ways to give: link text', 1, 'body'),
+    text('otherEmail', 'Other ways to give: email', 1, 'body'),
+  ],
+  preview: { prepare: () => ({ title: 'A Founding Opportunity' }) },
+})
+
 export const page = defineType({
   name: 'page',
   title: 'Page',
@@ -306,5 +338,5 @@ export const page = defineType({
   preview: { select: { title: 'title', subtitle: 'slug.current' } },
 })
 
-export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, person, page]
-export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage'])
+export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, givingPage, person, page]
+export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage', 'givingPage'])

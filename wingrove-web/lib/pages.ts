@@ -229,8 +229,8 @@ export const teamDefaults = {
     'A school like Wingrove doesn’t just appear. It’s built—step by step, gift by gift—by a community that believes every child deserves a place to grow, to learn, and to flourish.',
     'The future of education is being written now. With your support, it will soar at Wingrove Academy.',
   ],
-  givingButton: 'Shape the Future of the School',
-  givingHref: '/?interest=donor#updates',
+  givingButton: 'Help Shape an Enduring Institution',
+  givingHref: '/founding-opportunity',
 }
 
 const P = (name: string, slug: string, group: Person['group'], order: number, role?: string): Person => ({ name, slug, group, order, role })
@@ -291,5 +291,65 @@ export async function getTeam() {
     givingBody: pick(s.givingBody as string[], d.givingBody),
     givingButton: t('givingButton'),
     givingHref: t('givingHref'),
+  }
+}
+
+/* ---------------- A Founding Opportunity (donor page, not in the navigation) ---------------- */
+
+export type Stat = { value: string; label: string }
+
+export const givingDefaults = {
+  heroEyebrow: 'Advancement',
+  heroTitle: 'A Founding Opportunity',
+  heroLead: 'Help shape an enduring institution.',
+  intro: [
+    'Exceptional schools shape generations. Wingrove Academy’s founding offers a rare opportunity to help establish one, bringing a distinctive vision of educational excellence to Palm Beach County.',
+    'Designed for depth of learning and distinction in individual achievement, Wingrove will unite rigorous academics, applied learning, the arts, and athletics. Students will have the time and guidance to develop exceptional strengths and the independence and judgment to lead, innovate, and shape the institutions and communities of the future.',
+    'Founding philanthropy will help establish this standard from the beginning, influencing the caliber of educators, depth of programming, and culture that will define Wingrove for generations.',
+  ],
+  supportTitle: 'What Your Support Makes Possible',
+  supportItems: [
+    { label: 'Exceptional Educators', body: 'Attract accomplished faculty and school leaders who will bring Wingrove’s educational vision to life and guide students toward exceptional achievement.' },
+    { label: 'Distinctive Learning', body: 'Develop an original PreK–12 curriculum that connects academic depth with applied learning, artistic expression, athletic development, and global experiences.' },
+    { label: 'An Enduring Campus', body: 'Create purpose-built academic, arts, and athletics facilities across 43.8 acres in Wellington, establishing an educational and civic anchor for Palm Beach County.' },
+  ],
+  statsTitle: 'A Shared Vision. Growing Commitment.',
+  stats: [
+    { value: '$50.6 Million', label: 'Philanthropic Commitments to Date' },
+    { value: '$155 Million', label: 'Founding Capital Campaign' },
+    { value: 'Fall 2029', label: 'Planned school opening' },
+  ] as Stat[],
+  giftTitle: 'Make a Founding Gift',
+  giftBody: 'Join the families and leaders helping bring Wingrove Academy to life. Your gift will help turn a founding vision into an enduring institution, with an influence that extends across generations.',
+  formButton: 'Connect With Advancement',
+  otherTitle: 'Explore Other Ways to Give',
+  otherBody: 'To discuss a multiyear pledge, a gift of appreciated stock, or naming and recognition opportunities,',
+  otherLinkLabel: 'connect with our advancement team',
+  otherEmail: 'info@wingroveacademy.org',
+}
+
+export async function getGiving() {
+  const s = await doc('givingPage')
+  const d = givingDefaults
+  const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
+  return {
+    hero: pic(s.heroImage, 'arts-courtyard', 'Students and visitors gathered in the performing arts courtyard'),
+    heroEyebrow: t('heroEyebrow'),
+    heroTitle: t('heroTitle'),
+    heroLead: t('heroLead'),
+    intro: pick(s.intro as string[], d.intro),
+    supportTitle: t('supportTitle'),
+    supportImage: pic(s.supportImage, 'campus-walk-2', 'A teacher talking with students along the bright second-floor walkway'),
+    supportItems: pick(s.supportItems as { label: string; body: string }[], d.supportItems),
+    statsTitle: t('statsTitle'),
+    stats: pick(s.stats as Stat[], d.stats),
+    statsImage: pic(s.statsImage, 'courtyard', ''),
+    giftTitle: t('giftTitle'),
+    giftBody: t('giftBody'),
+    formButton: t('formButton'),
+    otherTitle: t('otherTitle'),
+    otherBody: t('otherBody'),
+    otherLinkLabel: t('otherLinkLabel'),
+    otherEmail: t('otherEmail'),
   }
 }

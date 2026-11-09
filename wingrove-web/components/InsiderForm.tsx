@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 const ROLES = ['Prospective family', 'Donor or partner', 'Prospective faculty or staff', 'Member of the community']
 
 /** Become an Insider sign-up. Posts to /api/insider, which forwards to Wingrove's own HubSpot form. */
-export default function InsiderForm({ button }: { button: string }) {
+export default function InsiderForm({ button, defaultRole }: { button: string; defaultRole?: string }) {
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
-  const [role, setRole] = useState(ROLES[0])
+  const [role, setRole] = useState(defaultRole && ROLES.includes(defaultRole) ? defaultRole : ROLES[0])
 
   // ?interest=donor (from "Shape the Future of the School") pre-selects Donor or partner
   useEffect(() => {
