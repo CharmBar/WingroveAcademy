@@ -1,12 +1,12 @@
 import { client } from './sanity'
 
-export type SimplePage = { title: string; eyebrow?: string; intro?: string; body?: any[]; updated?: string }
+export type SimplePage = { title: string; eyebrow?: string; intro?: string; body?: any[]; lastUpdated?: string }
 
 /** Simple pages edited in Studio → Pages (e.g. Privacy Policy), served at /<slug>. */
 export async function getSimplePage(slug: string): Promise<SimplePage | null> {
   if (!client) return null
   try {
-    return await client.fetch(`*[_type == "page" && slug.current == $slug][0]{title, eyebrow, intro, body, "updated": _updatedAt}`, { slug }, { next: { revalidate: 60 } })
+    return await client.fetch(`*[_type == "page" && slug.current == $slug][0]{title, eyebrow, intro, body, lastUpdated}`, { slug }, { next: { revalidate: 60 } })
   } catch (e) {
     console.error('Sanity fetch failed', slug, e)
     return null

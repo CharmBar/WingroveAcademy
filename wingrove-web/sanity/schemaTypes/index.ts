@@ -300,6 +300,7 @@ export const page = defineType({
     defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required() }),
     defineField({ name: 'eyebrow', type: 'string' }),
     defineField({ name: 'intro', type: 'text', rows: 2 }),
+    defineField({ name: 'lastUpdated', title: 'Last updated (as shown)', type: 'string', description: 'e.g. August 2025. Leave empty to hide.' }),
     defineField({ name: 'body', type: 'array', of: [defineArrayMember({ type: 'block' })] }),
   ],
   preview: { select: { title: 'title', subtitle: 'slug.current' } },

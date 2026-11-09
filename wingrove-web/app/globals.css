@@ -462,4 +462,8 @@ a{color:inherit}
 .prose ul{margin:0 0 1em;padding-left:1.2em}
 .prose li{margin:.25em 0}
 .prose a{color:var(--blue)}
-.legal__updated{margin-top:2.4em;font-size:13px;color:#6B7785}
+.legal__updated{margin:0 0 1.6em;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#6B7785}
+.prose h3{font-family:var(--body);font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin:1.8em 0 .6em}
+.prose ul ul{margin:.3em 0 .4em;list-style:circle}
+.prose strong{color:var(--navy);font-weight:600}
+.prose hr{border:0;border-top:1px solid #D6DCE3;margin:3em 0}

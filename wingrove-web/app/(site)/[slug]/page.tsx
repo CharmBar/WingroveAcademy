@@ -25,15 +25,11 @@ export default async function SimplePageRoute({ params }: Props) {
         {p.eyebrow && <div className="eyebrow">{p.eyebrow}</div>}
         <h1>{p.title}</h1>
         {p.intro && <p className="legal__intro">{p.intro}</p>}
+        {p.lastUpdated && <p className="legal__updated legal__updated--top">Last updated: {p.lastUpdated}</p>}
         <hr className="rule rule--green" />
         <div className="prose">
           <PortableText value={p.body || []} />
         </div>
-        {p.updated && (
-          <p className="legal__updated">
-            Last updated {new Date(p.updated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-        )}
       </div>
     </section>
   )
