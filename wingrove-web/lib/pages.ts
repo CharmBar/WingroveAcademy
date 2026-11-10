@@ -415,7 +415,7 @@ export async function getGiving() {
   const d = givingDefaults
   const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
   return {
-    hero: pic(s.heroImage, 'arts-courtyard', 'Students and visitors gathered in the performing arts courtyard'),
+    hero: pic(s.heroImage, 'courtyard', 'The performing arts courtyard lawn with the observatory dome beyond'),
     heroEyebrow: t('heroEyebrow'),
     heroTitle: t('heroTitle'),
     heroLead: t('heroLead'),
@@ -427,7 +427,7 @@ export async function getGiving() {
     supportItems: pick(s.supportItems as { label: string; body: string }[], d.supportItems),
     statsTitle: t('statsTitle'),
     stats: pick(s.stats as Stat[], d.stats),
-    statsImage: pic(s.statsImage, 'courtyard', ''),
+    statsImage: pic(s.statsImage, 'arts-courtyard', ''),
     giftEyebrow: t('giftEyebrow'),
     giftTitle: t('giftTitle'),
     giftSubtitle: t('giftSubtitle'),
