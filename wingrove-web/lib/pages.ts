@@ -272,6 +272,11 @@ export async function getCampus() {
     planIntro: t('planIntro'),
     plan: planUp ? { src: planUp, srcSet: undefined } : { src: '/media/campus.webp', srcSet: '/media/campus-sm.webp 900w, /media/campus.webp 1246w' },
     areas: planMarks(pick(s.areas as Area[], d.areas)),
+    street: {
+      label: s.streetLabel === '' ? '' : pick(s.streetLabel as string, 'Stribling Way'),
+      x: Number.isFinite(s.streetX) ? Number(s.streetX) : 24,
+      y: Number.isFinite(s.streetY) ? Number(s.streetY) : 19.6,
+    },
     galleryTitle: t('galleryTitle'),
     gallery: gallery(s.gallery, d.gallery),
     closing: t('closing'),

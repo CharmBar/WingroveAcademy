@@ -53,7 +53,7 @@ export default async function CampusPage() {
           <h2 className="h2">{c.planTitle}</h2>
           <hr className="rule rule--green" />
           <p className="section-lead">{c.planIntro}</p>
-          <SitePlan src={c.plan.src} srcSet={c.plan.srcSet} areas={c.areas} />
+          <SitePlan src={c.plan.src} srcSet={c.plan.srcSet} areas={c.areas} street={c.street} />
         </div>
       </section>
 

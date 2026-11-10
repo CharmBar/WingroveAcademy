@@ -10,7 +10,17 @@ const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
  * a list item highlights both; markers that share a label and mark (the two Gate Houses) light up together.
  * The list shows letters first, then numbers, each place once.
  */
-export default function SitePlan({ src, srcSet, areas }: { src: string; srcSet?: string; areas: PlanMark[] }) {
+export default function SitePlan({
+  src,
+  srcSet,
+  areas,
+  street,
+}: {
+  src: string
+  srcSet?: string
+  areas: PlanMark[]
+  street?: { label: string; x: number; y: number }
+}) {
   const [active, setActive] = useState<number | null>(null)
   const current = areas.find((a) => a.i === active) || null
   const on = (a: PlanMark) => !!current && group(a) === group(current)
@@ -28,6 +38,12 @@ export default function SitePlan({ src, srcSet, areas }: { src: string; srcSet?:
     <div className="plan">
       <div className="plan__map">
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
+        {street?.label && (
+          <div className="plan__street" style={{ left: `${street.x}%`, height: `${street.y}%` }} aria-hidden="true">
+            <span>{street.label}</span>
+            <i />
+          </div>
+        )}
         {areas.map((a) => (
           <button
             key={a.i}
