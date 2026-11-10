@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { PageHero } from '@/components/Blocks'
 import InsiderForm from '@/components/InsiderForm'
 import QuoteCarousel from '@/components/QuoteCarousel'
+import CountUp from '@/components/CountUp'
 import { PersonCard } from '@/components/Person'
 import { getGiving, getPeople, getTeam } from '@/lib/pages'
 
@@ -60,7 +61,7 @@ export default async function FoundingOpportunityPage() {
           <ul className="found-stats__list">
             {g.stats.map((s) => (
               <li key={s.label}>
-                <strong>{s.value}</strong>
+                <strong>{s.countUp ? <CountUp value={s.value} /> : s.value}</strong>
                 <span>{s.label}</span>
               </li>
             ))}

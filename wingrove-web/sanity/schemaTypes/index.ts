@@ -394,7 +394,7 @@ export const givingPage = defineType({
       title: 'Figures',
       type: 'array',
       group: 'body',
-      of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'value', type: 'string', description: 'e.g. $50.6 Million' }), defineField({ name: 'label', type: 'string' })], preview: { select: { title: 'value', subtitle: 'label' } } })],
+      of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'value', type: 'string', description: 'e.g. $50.6 Million' }), defineField({ name: 'label', type: 'string' }), defineField({ name: 'countUp', title: 'Count up when scrolled into view', type: 'boolean', initialValue: false })], preview: { select: { title: 'value', subtitle: 'label' } } })],
     }),
     text('giftEyebrow', 'Gift: eyebrow', 1, 'body'),
     text('giftTitle', 'Gift: heading', 1, 'body'),

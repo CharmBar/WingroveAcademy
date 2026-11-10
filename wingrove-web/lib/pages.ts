@@ -365,7 +365,7 @@ export async function getTeam() {
 
 /* ---------------- A Founding Opportunity (donor page, not in the navigation) ---------------- */
 
-export type Stat = { value: string; label: string }
+export type Stat = { value: string; label: string; countUp?: boolean }
 
 export const givingDefaults = {
   heroEyebrow: 'Advancement',
@@ -394,7 +394,7 @@ export const givingDefaults = {
   ],
   statsTitle: 'A Shared Vision. Growing Commitment.',
   stats: [
-    { value: '$50.6 Million', label: 'Philanthropic Commitments to Date' },
+    { value: '$50.6 Million', label: 'Philanthropic Commitments to Date', countUp: true },
     { value: '$155 Million', label: 'Founding Capital Campaign' },
     { value: 'Fall 2029', label: 'Planned school opening' },
   ] as Stat[],

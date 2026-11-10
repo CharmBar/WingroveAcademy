@@ -606,3 +606,8 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .pquotes__dots button{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.85);background:transparent;padding:0;cursor:pointer;transition:background .3s ease,transform .3s ease}
 .pquotes__dots button.is-on{background:var(--white);transform:scale(1.15)}
 @media (prefers-reduced-motion:reduce){.pquotes__item{transition:none;transform:none}}
+
+/* Count-up figure: the final value holds the space; the counting value sits over it */
+.countup{display:inline-grid;font-variant-numeric:tabular-nums}
+.countup>span{grid-area:1/1}
+.countup__final[aria-hidden="true"]{visibility:hidden}
