@@ -179,7 +179,25 @@ export async function getLearning() {
 
 /* ---------------- The Campus ---------------- */
 
-export type Area = { n: number; label: string; x: number; y: number; note?: string }
+export type Area = { n: number; label: string; x: number; y: number; note?: string; kind?: 'letter' | 'number' }
+/** A site plan marker ready to show: its mark (A, B… or 1, 2…), its style, and where it sits in the list. */
+export type PlanMark = Area & { mark: string; kind: 'letter' | 'number'; i: number }
+
+/**
+ * Letters are given in list order (A, B, C…); numbers show the number entered, so two markers can
+ * share one (both Gate Houses are 1). Areas not yet set to Letter or Number: 1 and 2 stay numbers,
+ * the rest become letters.
+ */
+export function planMarks(areas: Area[]): PlanMark[] {
+  let letter = 0
+  return areas
+    .filter((a) => a && a.label && Number.isFinite(Number(a.x)) && Number.isFinite(Number(a.y)))
+    .map((a, i) => {
+      const kind: 'letter' | 'number' = a.kind || (Number(a.n) > 0 && Number(a.n) <= 2 ? 'number' : 'letter')
+      const mark = kind === 'letter' ? (letter < 26 ? String.fromCharCode(65 + letter++) : String(++letter)) : String(a.n ?? '')
+      return { ...a, kind, mark, i }
+    })
+}
 
 export const campusDefaults = {
   heroEyebrow: 'The Campus',
@@ -203,22 +221,25 @@ export const campusDefaults = {
     'Every detail is intentional. Because when students are inspired by where they learn, they are better prepared to become who they are meant to be.',
   ],
   planTitle: 'Explore the Campus',
-  planIntro: 'Select a number on the plan, or a name in the list, to find each part of the campus.',
+  planIntro: 'Select a letter or number on the plan, or a name in the list, to find each part of the campus.',
   // Positions are percentages across and down the illustrated plan; adjust them in the Studio.
   areas: [
-    { n: 1, label: 'Gate Houses', x: 60.2, y: 83.4 },
-    { n: 2, label: 'Drop-off / Pick-up', x: 54.6, y: 56.2 },
-    { n: 3, label: 'Village Center', x: 35.9, y: 46.4 },
-    { n: 4, label: 'Lower School', x: 51.4, y: 31.3 },
-    { n: 5, label: 'Athletic Building', x: 17.7, y: 45.4 },
-    { n: 6, label: 'Aquatics Center', x: 13.6, y: 61.5 },
-    { n: 7, label: 'Black Box', x: 30.5, y: 40.5 },
-    { n: 8, label: 'Sports', x: 30.9, y: 67.4 },
-    { n: 9, label: 'Middle and Upper School', x: 46.5, y: 23.4 },
-    { n: 10, label: 'Theater', x: 19.7, y: 34.2 },
-    { n: 11, label: 'Baseball Field', x: 68.2, y: 58.6 },
-    { n: 12, label: 'Practice Fields', x: 49.4, y: 71.3 },
-    { n: 13, label: 'Parking Garage', x: 85.9, y: 72.3 },
+    { kind: 'letter', n: 3, label: 'Innovation Center', x: 35.9, y: 46.4 },
+    { kind: 'letter', n: 4, label: 'Lower School', x: 51.4, y: 31.3 },
+    { kind: 'letter', n: 5, label: 'Athletic Building', x: 17.7, y: 45.4 },
+    { kind: 'letter', n: 6, label: 'Aquatics Center', x: 23, y: 50 },
+    { kind: 'letter', n: 7, label: 'Village Center', x: 30.5, y: 40.5 },
+    { kind: 'letter', n: 8, label: 'Main Track & Field', x: 30.9, y: 67.4 },
+    { kind: 'letter', n: 9, label: 'Middle and Upper School', x: 46, y: 54 },
+    { kind: 'letter', n: 10, label: 'Tennis Center', x: 45.7, y: 61.3 },
+    { kind: 'letter', n: 11, label: 'Theater', x: 19.7, y: 34.2 },
+    { kind: 'letter', n: 12, label: 'Softball Field', x: 68.2, y: 58.6 },
+    { kind: 'letter', n: 13, label: 'Baseball Field', x: 71.5, y: 73 },
+    { kind: 'letter', n: 14, label: 'Practice Fields', x: 49.4, y: 71.3 },
+    { kind: 'letter', n: 15, label: 'Parking Garage', x: 13.6, y: 61.5 },
+    { kind: 'number', n: 1, label: 'Gate Houses', x: 60.2, y: 83.4 },
+    { kind: 'number', n: 1, label: 'Gate Houses', x: 25, y: 33 },
+    { kind: 'number', n: 2, label: 'Drop-off / Pick-up', x: 54.6, y: 56.2 },
   ] as Area[],
   galleryTitle: 'Around Campus',
   gallery: [
@@ -250,7 +271,7 @@ export async function getCampus() {
     planTitle: t('planTitle'),
     planIntro: t('planIntro'),
     plan: planUp ? { src: planUp, srcSet: undefined } : { src: '/media/campus.webp', srcSet: '/media/campus-sm.webp 900w, /media/campus.webp 1246w' },
-    areas: pick(s.areas as Area[], d.areas),
+    areas: planMarks(pick(s.areas as Area[], d.areas)),
     galleryTitle: t('galleryTitle'),
     gallery: gallery(s.gallery, d.gallery),
     closing: t('closing'),

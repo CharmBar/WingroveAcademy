@@ -310,20 +310,27 @@ export const campusPage = defineType({
     { ...img('planImage', 'Illustrated site plan', 'Leave empty to use the current illustration. If you replace it, move the numbers to match.'), group: 'plan' },
     defineField({
       name: 'areas',
-      title: 'Numbered areas',
+      title: 'Site plan markers',
+      description: 'Letters are filled in automatically in list order (A, B, C…). Numbers show the number you enter; two markers can share one.',
       type: 'array',
       group: 'plan',
       of: [
         defineArrayMember({
           type: 'object',
           fields: [
-            defineField({ name: 'n', title: 'Number', type: 'number' }),
+            defineField({
+              name: 'kind',
+              title: 'Marker',
+              type: 'string',
+              options: { list: [{ title: 'Letter (navy)', value: 'letter' }, { title: 'Number (light blue)', value: 'number' }], layout: 'radio', direction: 'horizontal' },
+            }),
+            defineField({ name: 'n', title: 'Number', type: 'number', description: 'Only used when Marker is Number.', hidden: ({ parent }: any) => parent?.kind === 'letter' }),
             defineField({ name: 'label', type: 'string' }),
             defineField({ name: 'x', title: 'Across (%)', type: 'number', description: '0 = left edge, 100 = right edge' }),
             defineField({ name: 'y', title: 'Down (%)', type: 'number', description: '0 = top, 100 = bottom' }),
             defineField({ name: 'note', type: 'text', rows: 2, description: 'Optional short description' }),
           ],
-          preview: { select: { n: 'n', title: 'label' }, prepare: ({ n, title }) => ({ title: `${n}. ${title}` }) },
+          preview: { select: { n: 'n', kind: 'kind', title: 'label' }, prepare: ({ n, kind, title }) => ({ title: title || 'New marker', subtitle: kind === 'number' ? `Number ${n ?? ''}` : 'Letter' }) },
         }),
       ],
     }),

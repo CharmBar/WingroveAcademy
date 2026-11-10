@@ -1,28 +1,45 @@
 'use client'
 
 import { useState } from 'react'
-import type { Area } from '@/lib/pages'
+import type { PlanMark } from '@/lib/pages'
 
-/** Illustrated site plan with numbered markers; selecting a marker or a list item highlights both. */
-export default function SitePlan({ src, srcSet, areas }: { src: string; srcSet?: string; areas: Area[] }) {
+const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
+
+/**
+ * Illustrated site plan with lettered (navy) and numbered (light blue) markers. Selecting a marker or
+ * a list item highlights both; markers that share a label and mark (the two Gate Houses) light up together.
+ * The list shows letters first, then numbers, each place once.
+ */
+export default function SitePlan({ src, srcSet, areas }: { src: string; srcSet?: string; areas: PlanMark[] }) {
   const [active, setActive] = useState<number | null>(null)
-  const current = areas.find((a) => a.n === active)
+  const current = areas.find((a) => a.i === active) || null
+  const on = (a: PlanMark) => !!current && group(a) === group(current)
+  const toggle = (i: number) => setActive(active === i ? null : i)
+
+  const seen = new Set<string>()
+  const list = [...areas.filter((a) => a.kind === 'letter'), ...areas.filter((a) => a.kind === 'number').sort((a, b) => Number(a.n) - Number(b.n))].filter((a) => {
+    const g = group(a)
+    if (seen.has(g)) return false
+    seen.add(g)
+    return true
+  })
+
   return (
     <div className="plan">
       <div className="plan__map">
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
         {areas.map((a) => (
           <button
-            key={a.n}
+            key={a.i}
             type="button"
-            className={`plan__pin${active === a.n ? ' is-on' : ''}`}
+            className={`plan__pin plan__pin--${a.kind}${on(a) ? ' is-on' : ''}`}
             style={{ left: `${a.x}%`, top: `${a.y}%` }}
-            aria-label={`${a.n}. ${a.label}`}
-            aria-pressed={active === a.n}
-            onClick={() => setActive(active === a.n ? null : a.n)}
-            onMouseEnter={() => setActive(a.n)}
+            aria-label={`${a.mark}. ${a.label}`}
+            aria-pressed={on(a)}
+            onClick={() => toggle(a.i)}
+            onMouseEnter={() => setActive(a.i)}
           >
-            {a.n}
+            {a.mark}
           </button>
         ))}
         {current && (
@@ -33,10 +50,10 @@ export default function SitePlan({ src, srcSet, areas }: { src: string; srcSet?:
         )}
       </div>
       <ol className="plan__list">
-        {areas.map((a) => (
-          <li key={a.n}>
-            <button type="button" className={active === a.n ? 'is-on' : ''} onClick={() => setActive(active === a.n ? null : a.n)} onMouseEnter={() => setActive(a.n)}>
-              <span className="plan__num">{a.n}</span>
+        {list.map((a) => (
+          <li key={group(a)} className={a.kind === 'number' && list.find((x) => x.kind === 'number') === a ? 'plan__list-break' : undefined}>
+            <button type="button" className={on(a) ? 'is-on' : ''} onClick={() => toggle(a.i)} onMouseEnter={() => setActive(a.i)}>
+              <span className={`plan__num plan__num--${a.kind}`}>{a.mark}</span>
               {a.label}
             </button>
           </li>
