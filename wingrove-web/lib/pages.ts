@@ -437,3 +437,26 @@ export async function getGiving() {
     otherBody: t('otherBody'),
   }
 }
+
+/* ---------------- Why Wingrove ---------------- */
+
+export const whyDefaults = {
+  heroEyebrow: 'Why Wingrove',
+  heroTitle: '',
+  heroLead: '',
+  indexTitle: 'At a glance',
+}
+
+/** Hero comes from the Why Wingrove document; the distinctions themselves are the home page's, so they are edited in one place. */
+export async function getWhy() {
+  const s = await doc('whyPage')
+  const d = whyDefaults
+  const t = (k: keyof typeof d) => pick(s[k as string], d[k]) as string
+  return {
+    hero: pic(s.heroImage, 'campus-walk', 'Students gathered in the glass-walled space along the campus walk'),
+    heroEyebrow: t('heroEyebrow'),
+    heroTitle: t('heroTitle'),
+    heroLead: t('heroLead'),
+    indexTitle: t('indexTitle'),
+  }
+}

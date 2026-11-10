@@ -6,7 +6,7 @@ import GoogleTag from '@/components/GoogleTag'
 import CookieBanner, { CookiePrefsLink } from '@/components/CookieBanner'
 
 const LINKS = [
-  { href: '/#distinct', label: 'Why Wingrove' },
+  { href: '/why-wingrove', label: 'Why Wingrove' },
   { href: '/learning-experience', label: 'Learning Experience' },
   { href: '/campus', label: 'The Campus' },
   { href: '/visionaries', label: 'The Visionaries' },

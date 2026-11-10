@@ -87,6 +87,9 @@ export default async function Home() {
           <hr className="rule rule--green" />
           <p className="distinct__lead">{h.distinctIntro}</p>
           <PillarCarousel items={h.pillars} />
+          <a className="distinct__more" href="/why-wingrove">
+            Explore why Wingrove <span aria-hidden="true">→</span>
+          </a>
         </div>
       </section>
 

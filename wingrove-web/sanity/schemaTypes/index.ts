@@ -357,6 +357,19 @@ export const teamPage = defineType({
   preview: { prepare: () => ({ title: 'The Visionaries' }) },
 })
 
+export const whyPage = defineType({
+  name: 'whyPage',
+  title: 'Why Wingrove',
+  type: 'document',
+  description: 'The Why Wingrove page. The ten distinctions themselves are edited on the Home page (What Makes Wingrove Distinctive), so the carousel and this page always match.',
+  groups: [{ name: 'hero', title: 'Hero', default: true }],
+  fields: [
+    ...hero(),
+    defineField({ name: 'indexTitle', title: 'Index heading', type: 'string', group: 'hero', description: 'Above the numbered list of distinctions. Default: At a glance' }),
+  ],
+  preview: { prepare: () => ({ title: 'Why Wingrove' }) },
+})
+
 export const givingPage = defineType({
   name: 'givingPage',
   title: 'A Founding Opportunity',
@@ -423,5 +436,5 @@ export const page = defineType({
   preview: { select: { title: 'title', subtitle: 'slug.current' } },
 })
 
-export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, givingPage, person, page]
-export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage', 'givingPage'])
+export const schemaTypes = [siteSettings, homePage, learningPage, campusPage, teamPage, whyPage, givingPage, person, page]
+export const singletonTypes = new Set(['siteSettings', 'homePage', 'learningPage', 'campusPage', 'teamPage', 'whyPage', 'givingPage'])

@@ -5,6 +5,7 @@ export const structure: StructureResolver = (S) =>
     .title('Wingrove Academy')
     .items([
       S.listItem().title('Home page').id('homePage').child(S.document().schemaType('homePage').documentId('homePage')),
+      S.listItem().title('Why Wingrove').id('whyPage').child(S.document().schemaType('whyPage').documentId('whyPage')),
       S.listItem().title('The Learning Experience').id('learningPage').child(S.document().schemaType('learningPage').documentId('learningPage')),
       S.listItem().title('The Campus').id('campusPage').child(S.document().schemaType('campusPage').documentId('campusPage')),
       S.listItem().title('The Visionaries').id('teamPage').child(S.document().schemaType('teamPage').documentId('teamPage')),
