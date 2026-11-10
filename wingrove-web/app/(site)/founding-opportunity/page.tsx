@@ -94,7 +94,7 @@ export default async function FoundingOpportunityPage() {
             <p className="section-lead">{t.advancementIntro}</p>
             <div className="team__grid">
               {advancement.map((p) => (
-                <PersonCard key={p.slug} p={p} />
+                <PersonCard key={p.slug} p={p} section="advancement" />
               ))}
             </div>
           </div>

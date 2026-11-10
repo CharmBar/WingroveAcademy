@@ -19,14 +19,22 @@ export function Portrait({ p, size = 600 }: { p: Person; size?: number }) {
   )
 }
 
-export function PersonCard({ p }: { p: Person }) {
+/**
+ * In an Advancement section, people who are also on the ElevateED founding leadership team
+ * (they have a Founding Leadership position) carry ", ElevateED" after their title.
+ */
+export const roleIn = (p: Person, section?: string) =>
+  p.role && section === 'advancement' && typeof p.leadershipOrder === 'number' && !/elevateed/i.test(p.role) ? `${p.role}, ElevateED` : p.role
+
+export function PersonCard({ p, section }: { p: Person; section?: 'leadership' | 'advancement' }) {
+  const role = roleIn(p, section)
   return (
     <a className="pcard" href={`/visionaries/${p.slug}`}>
       <div className="pcard__media">
         <Portrait p={p} />
       </div>
       <div className="pcard__name">{p.name}</div>
-      {p.role && <div className="pcard__role">{p.role}</div>}
+      {role && <div className="pcard__role">{role}</div>}
     </a>
   )
 }
