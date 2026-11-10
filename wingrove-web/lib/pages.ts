@@ -376,6 +376,16 @@ export const givingDefaults = {
     'Designed for depth of learning and distinction in individual achievement, Wingrove will unite rigorous academics, applied learning, the arts, and athletics. Students will have the time and guidance to develop exceptional strengths and the independence and judgment to lead, innovate, and shape the institutions and communities of the future.',
     'Founding philanthropy will help establish this standard from the beginning, influencing the caliber of educators, depth of programming, and culture that will define Wingrove for generations.',
   ],
+  quotes: [
+    {
+      quote: 'Teaching children the same way we were taught 50 years ago is probably not the best way forward. Families like mine value a school that is thinking about the future and how best to prepare our children for it.',
+      attribution: 'Prospective Parent',
+    },
+    {
+      quote: 'Wingrove will not simply fill a need; it will set a precedent. Combining strong academics with real-world application, empowering children to think deeply and develop individual strengths, and maintaining a clear focus on safety and security.',
+      attribution: 'Prospective Parent',
+    },
+  ],
   supportTitle: 'What Your Support Makes Possible',
   supportItems: [
     { label: 'Exceptional Educators', body: 'Attract accomplished faculty and school leaders who will bring Wingrove’s educational vision to life and guide students toward exceptional achievement.' },
@@ -410,6 +420,8 @@ export async function getGiving() {
     heroTitle: t('heroTitle'),
     heroLead: t('heroLead'),
     intro: pick(s.intro as string[], d.intro),
+    quotes: (pick(s.quotes as { quote: string; attribution: string }[], d.quotes) || []).filter((q) => q && q.quote).slice(0, 3),
+    quotesImage: imageUrl(s.quotesImage, 2000) || '/media/leaf.webp',
     supportTitle: t('supportTitle'),
     supportImage: pic(s.supportImage, 'campus-walk-2', 'A teacher talking with students along the bright second-floor walkway'),
     supportItems: pick(s.supportItems as { label: string; body: string }[], d.supportItems),

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/Blocks'
 import InsiderForm from '@/components/InsiderForm'
+import QuoteCarousel from '@/components/QuoteCarousel'
 import { PersonCard } from '@/components/Person'
 import { getGiving, getPeople, getTeam } from '@/lib/pages'
 
@@ -28,6 +29,8 @@ export default async function FoundingOpportunityPage() {
           ))}
         </div>
       </section>
+
+      <QuoteCarousel quotes={g.quotes} image={g.quotesImage} />
 
       <section className="band found-support">
         <div className="wrap found-support__grid">

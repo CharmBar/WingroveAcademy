@@ -366,6 +366,24 @@ export const givingPage = defineType({
   fields: [
     ...hero(),
     paras('intro', 'Introduction', 'body'),
+    defineField({
+      name: 'quotes',
+      title: 'Parent quotes (up to 3; more than one rotates)',
+      type: 'array',
+      group: 'body',
+      validation: (r) => r.max(3),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'quote', type: 'text', rows: 4, description: 'Without quotation marks; they are added.' }),
+            defineField({ name: 'attribution', type: 'string', description: 'e.g. Prospective Parent' }),
+          ],
+          preview: { select: { title: 'quote', subtitle: 'attribution' } },
+        }),
+      ],
+    }),
+    { ...img('quotesImage', 'Parent quotes: background', 'Leave empty for the palm leaf.'), group: 'body' },
     text('supportTitle', 'Support: heading', 1, 'body'),
     { ...img('supportImage', 'Support: image'), group: 'body' },
     labelled('supportItems', 'Support: items', 'body'),
