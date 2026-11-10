@@ -38,12 +38,7 @@ export default function SitePlan({
     <div className="plan">
       <div className="plan__map">
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
-        {street?.label && (
-          <div className="plan__street" style={{ left: `${street.x}%`, height: `${street.y}%` }} aria-hidden="true">
-            <span>{street.label}</span>
-            <i />
-          </div>
-        )}
+        {street?.label && <StreetArrow {...street} />}
         {areas.map((a) => (
           <button
             key={a.i}
@@ -76,5 +71,32 @@ export default function SitePlan({
         ))}
       </ol>
     </div>
+  )
+}
+
+/**
+ * Street name in the paper margin with a hand-drawn style arrow that sweeps out from the end of the
+ * name and hooks down onto the road. (x, y) is the arrow tip, in % of the plan; the name sits above-left.
+ * Drawn in plan percentages so it scales with the map; the stroke stays the same width at any size.
+ */
+function StreetArrow({ label, x, y }: { label: string; x: number; y: number }) {
+  const sx = x - 4.2 // where the curve starts, just after the name
+  const sy = y - 10 // the name stays in the margin above the treeline
+  const c1 = [sx + 5.4, sy - 0.8]
+  const c2 = [x + 3.8, y - 5.2]
+  // arrowhead follows the curve's final direction
+  const ang = Math.atan2(y - c2[1], x - c2[0])
+  const head = (da: number) => [x - 1.6 * Math.cos(ang + da), y - 1.9 * Math.sin(ang + da)]
+  const [h1, h2] = [head(0.5), head(-0.5)]
+  return (
+    <>
+      <span className="plan__street-name" style={{ right: `${100 - sx + 0.8}%`, top: `${sy}%` }} aria-hidden="true">
+        {label}
+      </span>
+      <svg className="plan__street-arrow" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d={`M ${sx} ${sy} C ${c1[0]} ${c1[1]}, ${c2[0]} ${c2[1]}, ${x} ${y}`} />
+        <path d={`M ${h1[0]} ${h1[1]} L ${x} ${y} L ${h2[0]} ${h2[1]}`} />
+      </svg>
+    </>
   )
 }

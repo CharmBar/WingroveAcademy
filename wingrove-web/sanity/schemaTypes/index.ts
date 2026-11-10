@@ -309,8 +309,8 @@ export const campusPage = defineType({
     text('planIntro', 'Plan intro', 2, 'plan'),
     { ...img('planImage', 'Illustrated site plan', 'Leave empty to use the current illustration. If you replace it, move the numbers to match.'), group: 'plan' },
     text('streetLabel', 'Street name above the plan', 1, 'plan'),
-    defineField({ name: 'streetX', title: 'Street arrow: across (%)', type: 'number', group: 'plan', description: 'Where the arrow points. Default 24' }),
-    defineField({ name: 'streetY', title: 'Street arrow: down to (%)', type: 'number', group: 'plan', description: 'How far down the arrow reaches, to touch the street. Default 19.6' }),
+    defineField({ name: 'streetX', title: 'Street arrow tip: across (%)', type: 'number', group: 'plan', description: 'Where the arrow lands on the street; the name sits above and to the left. Default 85.5' }),
+    defineField({ name: 'streetY', title: 'Street arrow tip: down (%)', type: 'number', group: 'plan', description: 'Default 15.9' }),
     defineField({
       name: 'areas',
       title: 'Site plan markers',

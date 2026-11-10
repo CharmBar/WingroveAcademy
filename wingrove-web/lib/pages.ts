@@ -274,8 +274,8 @@ export async function getCampus() {
     areas: planMarks(pick(s.areas as Area[], d.areas)),
     street: {
       label: s.streetLabel === '' ? '' : pick(s.streetLabel as string, 'Stribling Way'),
-      x: Number.isFinite(s.streetX) ? Number(s.streetX) : 24,
-      y: Number.isFinite(s.streetY) ? Number(s.streetY) : 19.6,
+      x: Number.isFinite(s.streetX) ? Number(s.streetX) : 85.5,
+      y: Number.isFinite(s.streetY) ? Number(s.streetY) : 15.9,
     },
     galleryTitle: t('galleryTitle'),
     gallery: gallery(s.gallery, d.gallery),

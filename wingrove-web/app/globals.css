@@ -399,12 +399,10 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .plan__num{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--white);font-size:12px;font-variant-numeric:tabular-nums}
 .plan__list button.is-on .plan__num{background:var(--gold);color:var(--ink)}
 /* Numbered markers (arrival points such as the gate houses) in light blue with navy figures */
-/* Street name in the paper margin above the plan, with a fine arrow down to the road */
-.plan__street{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;padding-top:1.2%}
-.plan__street span{font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:var(--navy);white-space:nowrap;background:var(--cream);padding:2px 6px}
-.plan__street i{position:relative;flex:1;width:2px;margin-top:6px;background:var(--navy);opacity:.85}
-.plan__street i::after{content:"";position:absolute;left:50%;bottom:0;width:10px;height:10px;border-right:2px solid var(--navy);border-bottom:2px solid var(--navy);transform:translate(-50%,0) rotate(45deg);transform-origin:center;filter:drop-shadow(0 0 2px rgba(255,255,255,.9))}
-.plan__street i{filter:drop-shadow(0 0 2px rgba(255,255,255,.9))}
+/* Street name in the paper margin, with a curved arrow hooking down onto the road */
+.plan__street-name{position:absolute;transform:translateY(-50%);font-size:clamp(9px,.85vw,11px);letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:var(--navy);white-space:nowrap;pointer-events:none}
+.plan__street-arrow{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.plan__street-arrow path{fill:none;stroke:#7F93AE;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .plan__pin--number{background:#A9C8E8;color:var(--navy)}
 .plan__num--number{background:#A9C8E8;color:var(--navy)}
 .plan__list-break{margin-top:10px;padding-top:10px;border-top:1px solid #E3DCD3}
