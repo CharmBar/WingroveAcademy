@@ -81,7 +81,7 @@ export default function SitePlan({
  */
 function StreetArrow({ label, x, y }: { label: string; x: number; y: number }) {
   const sx = x - 4.2 // where the curve starts, just after the name
-  const sy = y - 10 // the name stays in the margin above the treeline
+  const sy = Math.max(y - 10, 3.5) // the name stays in the margin above the treeline, clear of the top edge
   const c1 = [sx + 5.4, sy - 0.8]
   const c2 = [x + 3.8, y - 5.2]
   // arrowhead follows the curve's final direction
