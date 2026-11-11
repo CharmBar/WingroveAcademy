@@ -15,11 +15,14 @@ export default function SitePlan({
   srcSet,
   areas,
   street,
+  shift = 0,
 }: {
   src: string
   srcSet?: string
   areas: PlanMark[]
   street?: { label: string; x: number; y: number }
+  /** Moves the map and everything on it left by this % of its width, so the campus edge meets the text edge. */
+  shift?: number
 }) {
   const [active, setActive] = useState<number | null>(null)
   const current = areas.find((a) => a.i === active) || null
@@ -36,7 +39,7 @@ export default function SitePlan({
 
   return (
     <div className="plan">
-      <div className="plan__map">
+      <div className="plan__map" style={shift ? { transform: `translateX(-${shift}%)` } : undefined}>
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
         {street?.label && <StreetArrow {...street} />}
         {areas.map((a) => (

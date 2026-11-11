@@ -271,6 +271,7 @@ export async function getCampus() {
     planTitle: t('planTitle'),
     planIntro: t('planIntro'),
     plan: planUp ? { src: planUp, srcSet: undefined } : { src: '/media/campus.webp', srcSet: '/media/campus-sm.webp 900w, /media/campus.webp 1246w' },
+    planShift: Number.isFinite(s.planShift) ? Math.max(0, Math.min(30, Number(s.planShift))) : 0,
     areas: planMarks(pick(s.areas as Area[], d.areas)),
     street: {
       label: s.streetLabel === '' ? '' : pick(s.streetLabel as string, 'Stribling Way'),
