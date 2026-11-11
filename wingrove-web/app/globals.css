@@ -172,6 +172,19 @@ a{color:inherit}
 .pc.is-running .pc__step.is-on span::after{animation:pcfill linear both;animation-duration:inherit}
 .pc__step.is-on span{animation-duration:inherit}
 @keyframes pcfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* Coontie pinnae (native to South Florida) as the progress marks: pale until reached, then
+   green, filling stem to tip while the card is showing. The second five are mirrored. */
+.pc--leaves .pc__steps{gap:8px}
+.pc--leaves .pc__step span{height:auto;aspect-ratio:6/1;max-height:14px;margin-inline:auto;background:#D6DDD5;-webkit-mask:var(--pinna) center/100% 100% no-repeat;mask:var(--pinna) center/100% 100% no-repeat}
+.pc--leaves .pc__step span.is-flipped{transform:scaleY(-1)}
+.pc--leaves .pc__step:hover span{background:#B9C7BC}
+.pc--leaves .pc__step.is-past span,.pc--leaves .pc__step.is-past:hover span{background:var(--green)}
+/* Phones: cards are swiped, so the leaves take the whole row instead of sharing it with the arrows */
+@media (max-width:600px){
+  .pc--leaves .pc__arrows{display:none}
+  .pc--leaves .pc__steps{max-width:none;gap:5px}
+  .pc--leaves .pc__step span{aspect-ratio:5/1}
+}
 .pc__arrows{display:flex;gap:10px}
 .pc__arrow{width:48px;height:48px;border-radius:50%;border:1px solid #B9C3BC;background:var(--white);color:var(--navy);display:grid;place-items:center;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
 .pc__arrow:hover{background:var(--navy);color:var(--white);border-color:var(--navy)}

@@ -17,6 +17,8 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
   const [paused, setPaused] = useState(false)
   const [visible, setVisible] = useState(false)
   const [reduce, setReduce] = useState(false)
+  // Preview: coontie pinnae in place of the progress bars (?preview=leaves)
+  const [leaves, setLeaves] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   // Swipe: follows the finger once a gesture is clearly sideways, then snaps to the next or previous card.
   const drag = useRef<{ x: number; y: number; id: number; dx: number; lock?: 'x' | 'y' } | null>(null)
@@ -28,6 +30,7 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
 
   useEffect(() => {
     setReduce(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    setLeaves(new URLSearchParams(window.location.search).get('preview') === 'leaves')
     const el = root.current
     if (!el) return
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 })
@@ -85,7 +88,7 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
   return (
     <div
       ref={root}
-      className={`pc${running ? ' is-running' : ''}`}
+      className={`pc${running ? ' is-running' : ''}${leaves ? ' pc--leaves' : ''}`}
       role="region"
       aria-roledescription="carousel"
       aria-label="What makes Wingrove distinctive"
@@ -143,7 +146,13 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
               className={`pc__step${k === i ? ' is-on' : ''}${k < i ? ' is-past' : ''}`}
               onClick={() => go(k)}
             >
-              <span style={k === i ? { animationDuration: `${INTERVAL}ms` } : undefined} />
+              <span
+                className={leaves && k >= 5 ? 'is-flipped' : undefined}
+                style={{
+                  ...(k === i ? { animationDuration: `${INTERVAL}ms` } : {}),
+                  ...(leaves ? { ['--pinna' as string]: `url(/brand/pinna-${(k % 5) + 1}.svg)` } : {}),
+                }}
+              />
             </button>
           ))}
         </div>
