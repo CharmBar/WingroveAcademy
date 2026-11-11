@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Gallery, InsiderBand, PageHero } from '@/components/Blocks'
+import FrondAccent from '@/components/FrondAccent'
 import SitePlan from '@/components/SitePlan'
 import { getCampus } from '@/lib/pages'
 
@@ -27,7 +28,10 @@ export default async function CampusPage() {
 
       <section className="band region">
         <div className="wrap region__grid">
-          <h2 className="region__title">{c.regionTitle}</h2>
+          <div>
+            <h2 className="region__title">{c.regionTitle}</h2>
+            <FrondAccent />
+          </div>
           <div>
             <hr className="rule rule--gold" />
             {c.regionBody.map((p) => (

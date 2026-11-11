@@ -172,19 +172,6 @@ a{color:inherit}
 .pc.is-running .pc__step.is-on span::after{animation:pcfill linear both;animation-duration:inherit}
 .pc__step.is-on span{animation-duration:inherit}
 @keyframes pcfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-/* Coontie pinnae (native to South Florida) as the progress marks: pale until reached, then
-   green, filling stem to tip while the card is showing. The second five are mirrored. */
-.pc--leaves .pc__steps{gap:8px}
-.pc--leaves .pc__step span{height:auto;aspect-ratio:6/1;max-height:14px;margin-inline:auto;background:#D6DDD5;-webkit-mask:var(--pinna) center/100% 100% no-repeat;mask:var(--pinna) center/100% 100% no-repeat}
-.pc--leaves .pc__step span.is-flipped{transform:scaleY(-1)}
-.pc--leaves .pc__step:hover span{background:#B9C7BC}
-.pc--leaves .pc__step.is-past span,.pc--leaves .pc__step.is-past:hover span{background:var(--green)}
-/* Phones: cards are swiped, so the leaves take the whole row instead of sharing it with the arrows */
-@media (max-width:600px){
-  .pc--leaves .pc__arrows{display:none}
-  .pc--leaves .pc__steps{max-width:none;gap:5px}
-  .pc--leaves .pc__step span{aspect-ratio:5/1}
-}
 .pc__arrows{display:flex;gap:10px}
 .pc__arrow{width:48px;height:48px;border-radius:50%;border:1px solid #B9C3BC;background:var(--white);color:var(--navy);display:grid;place-items:center;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
 .pc__arrow:hover{background:var(--navy);color:var(--white);border-color:var(--navy)}
@@ -493,6 +480,9 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .region p{margin:0 0 1em;color:#2F3D4E;max-width:56ch;font-size:clamp(16px,1.2vw,18px)}
 .region p:first-of-type{color:var(--navy);font-family:var(--display);font-size:clamp(20px,1.8vw,25px);line-height:1.4}
 .region .rule{margin:.6em 0 1.6em}
+/* Native frond accent under the South Florida headline (preview) */
+.region__frond{display:block;width:min(100%,460px);height:auto;margin:clamp(36px,5vw,64px) 0 0 -2%;opacity:.22;transform:rotate(-6deg);transform-origin:left center;pointer-events:none;user-select:none}
+@media (max-width:880px){.region__frond{width:min(70%,300px);margin:20px 0 4px}}
 @media (max-width:880px){.region__grid{grid-template-columns:minmax(0,1fr)}}
 
 /* Footer: Wingrove Answerer (not open yet) */
