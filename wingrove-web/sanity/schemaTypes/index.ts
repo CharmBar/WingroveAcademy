@@ -162,7 +162,7 @@ export const person = defineType({
       description: 'For someone outside the Leadership group (e.g. Advancement) who should also appear in Founding Leadership. Enter a position: leaders are sorted by their Order, so 55 places someone between 50 and 60. Leave empty to show them only in their own group.',
     }),
     img('photo', 'Photo'),
-    defineField({ name: 'shortBio', type: 'text', rows: 5 }),
+    defineField({ name: 'shortBio', title: 'Bio', type: 'text', rows: 8, description: 'Leave a blank line between paragraphs.' }),
     defineField({ name: 'quote', type: 'text', rows: 5, description: 'Shown on the profile page. Leave a blank line between paragraphs.' }),
     access,
   ],

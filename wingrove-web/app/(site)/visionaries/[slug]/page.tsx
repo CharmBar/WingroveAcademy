@@ -13,12 +13,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await getPerson((await params).slug)
-  return p ? { title: p.role ? `${p.name}, ${p.role}` : p.name, description: p.shortBio } : {}
+  return p ? { title: p.role ? `${p.name}, ${p.role}` : p.name, description: p.shortBio?.replace(/\s+/g, ' ').trim() } : {}
 }
 
 export default async function PersonPage({ params }: Props) {
   const p = await getPerson((await params).slug)
   if (!p) notFound()
+  // Blank lines start a new paragraph; a single return is kept as a line break
+  const bio = (p.shortBio || '').split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean)
   const quote = p.quote?.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean)
   return (
     <>
@@ -35,7 +37,20 @@ export default async function PersonPage({ params }: Props) {
               <h1>{p.name}</h1>
               {p.role && <p className="profile__role">{p.role}</p>}
               <hr className="rule rule--green" />
-              {p.shortBio ? <p className="profile__bio">{p.shortBio}</p> : <p className="profile__bio muted">Biography coming soon.</p>}
+              {bio.length ? (
+                bio.map((para, i) => (
+                  <p className="profile__bio" key={i}>
+                    {para.split('\n').map((line, j) => (
+                      <span key={j}>
+                        {j > 0 && <br />}
+                        {line}
+                      </span>
+                    ))}
+                  </p>
+                ))
+              ) : (
+                <p className="profile__bio muted">Biography coming soon.</p>
+              )}
               {!!quote?.length && (
                 <figure className="profile__quote">
                   <blockquote>
