@@ -57,7 +57,7 @@ export default function SitePlan({
 
   return (
     <div className="plan">
-      <div className="plan__map" ref={mapRef} style={shift ? { transform: `translateX(-${shift}%)` } : undefined}>
+      <div className="plan__map" ref={mapRef} style={shift ? { ['--plan-shift' as string]: `-${shift}%` } : undefined}>
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
         {street?.label && <StreetArrow {...street} />}
         {areas.map((a) => (
@@ -87,7 +87,7 @@ export default function SitePlan({
             <ol
               key={gi}
               className={`plan__list plan__list--${gi ? 'numbers' : 'letters'}`}
-              style={{ ['--rows' as string]: Math.ceil(group.length / 2) }}
+              style={{ ['--rows' as string]: Math.ceil(group.length / 2), ['--rows3' as string]: Math.ceil(group.length / 3) }}
             >
               {group.map((a) => (
                 <li key={`${a.kind}:${a.mark}:${a.label}`}>
