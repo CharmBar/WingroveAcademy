@@ -50,11 +50,13 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
       const res = await fetch('/api/insider', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ firstname: data.firstname, lastname: data.lastname, email: data.email, website: data.website, interests: picked, page: window.location.pathname }),
+        body: JSON.stringify({ firstname: data.firstname, lastname: data.lastname, email: data.email, message: data.message, website: data.website, interests: picked, page: window.location.pathname }),
       })
       const out = await res.json().catch(() => ({}))
-      setMsg(out.message || (res.ok ? 'Thank you. You’re on the list.' : 'Something went wrong. Please try again.'))
-      if (res.ok && out.ok) setDone(true)
+      if (res.ok && out.ok) {
+        setMsg('')
+        setDone(true)
+      } else setMsg(out.message || 'Something went wrong. Please try again.')
     } catch {
       setMsg('We couldn’t reach the server. Please try again.')
     } finally {
@@ -85,6 +87,12 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
           </label>
         ))}
       </fieldset>
+      <label className="full" htmlFor="f-message">
+        <span>
+          Message <span className="form__optional">(optional)</span>
+        </span>
+        <textarea id="f-message" name="message" rows={3} maxLength={2000} placeholder="Anything you’d like us to know" disabled={done} />
+      </label>
       <div className="form__hp" aria-hidden="true">
         <label htmlFor="f-website">Website</label>
         <input id="f-website" name="website" tabIndex={-1} autoComplete="off" />
@@ -92,9 +100,16 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
       <button className="btn" type="submit" disabled={busy || done}>
         {busy ? 'Sending…' : button}
       </button>
-      <p className="form__msg" id="formMsg" role="status">
-        {msg}
-      </p>
+      <div className="form__msg" id="formMsg" role="status">
+        {done ? (
+          <div className="form__thanks">
+            <strong>You’re in. Welcome to Wingrove Insiders.</strong>
+            <p>You’ll be among the first to see Wingrove Academy come to life as our vision takes shape. We’re excited to have you join us on this journey.</p>
+          </div>
+        ) : (
+          msg
+        )}
+      </div>
     </form>
   )
 }

@@ -34,6 +34,7 @@ async function sendHubSpot(body: Record<string, string>, req: Request) {
     ['firstname', body.firstname],
     ['lastname', body.lastname],
     [INTEREST_FIELD, body.interests],
+    ['message', body.message],
   ]
     .filter(([, v]) => v)
     .map(([name, value]) => ({ objectTypeId: '0-1', name: name as string, value: value as string }))
@@ -73,6 +74,7 @@ async function sendEmail(body: Record<string, string>) {
     ['Name', `${body.firstname} ${body.lastname}`.trim()],
     ['Email', body.email],
     ['Interested in', body.interestLabels],
+    ['Message', body.message],
   ].filter(([, v]) => v)
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -95,6 +97,7 @@ export async function POST(req: Request) {
   if (clean(raw?.website)) return NextResponse.json({ ok: true, message: 'Thank you. You’re on the list.' })
   const body: Record<string, string> = {}
   for (const k of ['firstname', 'lastname', 'email', 'page']) body[k] = clean(raw?.[k])
+  body.message = clean(raw?.message, 2000)
   const picked = Array.isArray(raw?.interests) ? (raw!.interests as unknown[]).filter((v): v is string => typeof v === 'string' && INTEREST_VALUES.includes(v)) : []
   body.interests = Array.from(new Set(picked)).join(';')
   body.interestLabels = Array.from(new Set(picked)).join(', ')
@@ -108,5 +111,5 @@ export async function POST(req: Request) {
   if (!hub && !mail) {
     return NextResponse.json({ ok: false, message: 'Sorry, that didn’t go through. Please try again.' }, { status: 502 })
   }
-  return NextResponse.json({ ok: true, message: 'Thank you. You’re on the list, and we’ll be in touch as Wingrove takes shape.' })
+  return NextResponse.json({ ok: true, message: 'You’re in. Welcome to Wingrove Insiders.' })
 }
