@@ -16,7 +16,16 @@ export const INTERESTS = [
 ] as const
 
 /** Become an Insider sign-up. Posts to /api/insider, which forwards to Wingrove's own HubSpot form. */
-export default function InsiderForm({ button, defaultInterests = ['News Updates'] }: { button: string; defaultInterests?: string[] }) {
+export default function InsiderForm({
+  button,
+  defaultInterests = ['News Updates'],
+  showPhone = false,
+}: {
+  button: string
+  defaultInterests?: string[]
+  /** Adds an optional mobile phone field (HubSpot contact property "phone") */
+  showPhone?: boolean
+}) {
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
@@ -40,6 +49,10 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
       setMsg('Enter an email address so we can keep you posted.')
       return
     }
+    if (data.phone?.trim() && (data.phone.replace(/\D/g, '').length < 7 || /[^\d\s()+.\-]/.test(data.phone))) {
+      setMsg('Please check the phone number, or leave it blank.')
+      return
+    }
     if (!picked.length) {
       setMsg('Choose at least one area you’re interested in.')
       return
@@ -50,7 +63,7 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
       const res = await fetch('/api/insider', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ firstname: data.firstname, lastname: data.lastname, email: data.email, message: data.message, website: data.website, interests: picked, page: window.location.pathname }),
+        body: JSON.stringify({ firstname: data.firstname, lastname: data.lastname, email: data.email, message: data.message, phone: showPhone ? data.phone : undefined, website: data.website, interests: picked, page: window.location.pathname }),
       })
       const out = await res.json().catch(() => ({}))
       if (res.ok && out.ok) {
@@ -78,6 +91,14 @@ export default function InsiderForm({ button, defaultInterests = ['News Updates'
         Email
         <input id="f-email" name="email" type="email" autoComplete="email" required disabled={done} />
       </label>
+      {showPhone && (
+        <label className="full" htmlFor="f-phone">
+          <span>
+            Mobile phone <span className="form__optional">(optional)</span>
+          </span>
+          <input id="f-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={30} disabled={done} />
+        </label>
+      )}
       <fieldset className="full form__interests" disabled={done}>
         <legend>I’m interested in</legend>
         {INTERESTS.map((o) => (

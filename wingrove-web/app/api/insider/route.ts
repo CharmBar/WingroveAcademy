@@ -34,6 +34,10 @@ async function sendHubSpot(body: Record<string, string>, req: Request) {
     ['firstname', body.firstname],
     ['lastname', body.lastname],
     [INTEREST_FIELD, body.interests],
+    // Requested property "phone"; also "mobilephone", the phone field on the Wingrove HubSpot form,
+    // so the number is kept even if HubSpot declines a property that isn't on the form.
+    ['phone', body.phone],
+    ['mobilephone', body.phone],
     ['message', body.message],
   ]
     .filter(([, v]) => v)
@@ -74,6 +78,7 @@ async function sendEmail(body: Record<string, string>) {
     ['Name', `${body.firstname} ${body.lastname}`.trim()],
     ['Email', body.email],
     ['Interested in', body.interestLabels],
+    ['Phone', body.phone],
     ['Message', body.message],
   ].filter(([, v]) => v)
   const res = await fetch('https://api.resend.com/emails', {
@@ -98,6 +103,7 @@ export async function POST(req: Request) {
   const body: Record<string, string> = {}
   for (const k of ['firstname', 'lastname', 'email', 'page']) body[k] = clean(raw?.[k])
   body.message = clean(raw?.message, 2000)
+  body.phone = clean(raw?.phone, 30).replace(/[^\d\s()+.\-]/g, '')
   const picked = Array.isArray(raw?.interests) ? (raw!.interests as unknown[]).filter((v): v is string => typeof v === 'string' && INTEREST_VALUES.includes(v)) : []
   body.interests = Array.from(new Set(picked)).join(';')
   body.interestLabels = Array.from(new Set(picked)).join(', ')
