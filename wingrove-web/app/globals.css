@@ -385,7 +385,7 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .story p{margin:0 0 1em;color:#2F3D4E;max-width:60ch}
 .story p:first-child{font-family:var(--display);font-size:clamp(20px,1.8vw,25px);line-height:1.4;color:var(--navy)}
 
-.planband{background:var(--cream);color:var(--navy);padding-block:clamp(64px,9vw,120px)}
+.planband{overflow:hidden;overflow:clip;background:var(--cream);color:var(--navy);padding-block:clamp(64px,9vw,120px)}
 .plan{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start}
 .plan__map{position:relative;max-width:100%}
 .plan__map>img{display:block;width:100%;height:auto}
