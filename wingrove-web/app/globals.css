@@ -396,6 +396,10 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .plan__map>img{display:block;width:100%;height:auto}
 .plan__pin{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;border:2px solid var(--white);background:var(--navy);color:var(--white);font:500 13px/1 var(--body);cursor:pointer;box-shadow:0 3px 10px rgba(12,34,64,.35);transition:transform .2s ease,background .2s ease;padding:0}
 .plan__pin:hover,.plan__pin.is-on{background:var(--gold);color:var(--ink);transform:translate(-50%,-50%) scale(1.15)}
+/* Markers rest faint so the buildings beneath show through; hovering, tapping or tabbing to one
+   (or its name in the list) brings it back to full strength. The list keeps solid colours. */
+.plan__pin{opacity:.5;transition:transform .2s ease,background .2s ease,opacity .2s ease}
+.plan__pin:hover,.plan__pin:focus-visible,.plan__pin.is-on{opacity:1;z-index:2}
 .plan__tip{position:absolute;transform:translate(-50%,calc(-100% - 22px));background:var(--white);color:var(--navy);padding:10px 14px;box-shadow:0 10px 30px rgba(12,34,64,.25);white-space:nowrap;pointer-events:none;display:flex;flex-direction:column;gap:2px;font-size:14px;max-width:min(260px,70vw)}
 .plan__tip span{white-space:normal;color:#2F3D4E;font-size:13px}
 .plan__list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
