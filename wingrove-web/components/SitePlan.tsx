@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { PlanMark } from '@/lib/pages'
 
 const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
@@ -16,6 +16,7 @@ export default function SitePlan({
   areas,
   street,
   shift = 0,
+  legendTop = 11.5,
 }: {
   src: string
   srcSet?: string
@@ -23,8 +24,22 @@ export default function SitePlan({
   street?: { label: string; x: number; y: number }
   /** Moves the map and everything on it left by this % of its width, so the campus edge meets the text edge. */
   shift?: number
+  /** On desktop the list starts this far down the map (% of its height), level with the top of the campus. */
+  legendTop?: number
 }) {
   const [active, setActive] = useState<number | null>(null)
+  // The list lines up with where the campus begins in the image, at any width
+  const mapRef = useRef<HTMLDivElement>(null)
+  const [offset, setOffset] = useState(0)
+  useEffect(() => {
+    const el = mapRef.current
+    if (!el) return
+    const measure = () => setOffset(Math.round((el.getBoundingClientRect().height * legendTop) / 100))
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [legendTop])
   const current = areas.find((a) => a.i === active) || null
   const on = (a: PlanMark) => !!current && group(a) === group(current)
   const toggle = (i: number) => setActive(active === i ? null : i)
@@ -42,7 +57,7 @@ export default function SitePlan({
 
   return (
     <div className="plan">
-      <div className="plan__map" style={shift ? { transform: `translateX(-${shift}%)` } : undefined}>
+      <div className="plan__map" ref={mapRef} style={shift ? { transform: `translateX(-${shift}%)` } : undefined}>
         <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
         {street?.label && <StreetArrow {...street} />}
         {areas.map((a) => (
@@ -66,7 +81,7 @@ export default function SitePlan({
           </div>
         )}
       </div>
-      <div className="plan__legend">
+      <div className="plan__legend" style={{ ['--legend-top' as string]: `${offset}px` }}>
         {[letters, numbers].map((group, gi) =>
           group.length ? (
             <ol
