@@ -15,7 +15,7 @@ export const INTERESTS = [
   { label: 'News & Updates', value: 'News Updates' },
 ] as const
 
-/** Become an Insider sign-up. Posts to /api/insider, which forwards to Wingrove's own HubSpot form. */
+/** Follow Our Journey sign-up. Posts to /api/insider, which forwards to Wingrove's own HubSpot form. */
 export default function InsiderForm({
   button,
   defaultInterests = ['News Updates'],
@@ -124,7 +124,7 @@ export default function InsiderForm({
       <div className="form__msg" id="formMsg" role="status">
         {done ? (
           <div className="form__thanks">
-            <strong>You’re in. Welcome to Wingrove Insiders.</strong>
+            <strong>You’re in. Thank you for following our journey.</strong>
             <p>You’ll be among the first to see Wingrove Academy come to life as our vision takes shape. We’re excited to have you join us on this journey.</p>
           </div>
         ) : (

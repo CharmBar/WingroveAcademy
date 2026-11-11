@@ -324,7 +324,7 @@ export const teamDefaults = {
     'The future of education is being written now. With your support, it will soar at Wingrove Academy.',
   ],
   givingButton: 'Help Shape an Enduring Institution',
-  givingHref: '/founding-opportunity',
+  givingHref: '/giving',
 }
 
 const P = (name: string, slug: string, group: Person['group'], order: number, role?: string): Person => ({ name, slug, group, order, role })
@@ -395,13 +395,13 @@ export async function getTeam() {
   }
 }
 
-/* ---------------- A Founding Opportunity (donor page, not in the navigation) ---------------- */
+/* ---------------- Giving (/giving) ---------------- */
 
 export type Stat = { value: string; label: string; countUp?: boolean }
 
 export const givingDefaults = {
-  heroEyebrow: 'Advancement',
-  heroTitle: 'A Founding Opportunity',
+  heroEyebrow: 'Giving',
+  heroTitle: 'An Opportunity to Shape the Future',
   heroLead: 'Help shape an enduring institution.',
   intro: [
     'Exceptional schools shape generations. Wingrove Academy’s founding offers a rare opportunity to help establish one, bringing a distinctive vision of educational excellence to Palm Beach County.',

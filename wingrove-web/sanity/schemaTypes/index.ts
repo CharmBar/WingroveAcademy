@@ -1,6 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
-/** Who can see a piece of content: everyone, signed-up Insiders, or invited stakeholders (portal). */
+/** Who can see a piece of content: everyone, people who signed up to Follow Our Journey, or invited stakeholders (portal). */
 const access = defineField({
   name: 'access',
   title: 'Who can see this',
@@ -9,7 +9,7 @@ const access = defineField({
   options: {
     list: [
       { title: 'Everyone', value: 'public' },
-      { title: 'Insiders (signed up)', value: 'insider' },
+      { title: 'Signed up (Follow Our Journey)', value: 'insider' },
       { title: 'Invited stakeholders', value: 'portal' },
     ],
     layout: 'radio',
@@ -57,7 +57,7 @@ export const homePage = defineType({
     { name: 'distinct', title: 'Distinctive' },
     { name: 'vision', title: 'Vision quote' },
     { name: 'chapters', title: 'Chapters' },
-    { name: 'insider', title: 'Insider sign-up' },
+    { name: 'insider', title: 'Follow Our Journey sign-up' },
   ],
   fields: [
     img('heroImage', 'Opening image', 'The wide campus elevation. Use the largest file you have (7,000+ px wide) so the zoom stays sharp.'),
@@ -356,7 +356,7 @@ export const teamPage = defineType({
     defineField({ name: 'showLeadership', title: 'Show Founding Leadership', type: 'boolean', group: 'body', initialValue: false, description: 'Off: only the Advancement team (and their profiles) appear on the site.' }),
     text('leadershipTitle', 'Leadership heading', 1, 'body'),
     text('leadershipIntro', 'Leadership intro', 2, 'body'),
-    defineField({ name: 'showAdvancement', title: 'Show Wingrove Academy Advancement Team', type: 'boolean', group: 'body', initialValue: true, description: 'Off: the Advancement team is hidden on this page. It still appears on the A Founding Opportunity donor page, and their profiles stay available.' }),
+    defineField({ name: 'showAdvancement', title: 'Show Wingrove Academy Advancement Team', type: 'boolean', group: 'body', initialValue: true, description: 'Off: the Advancement team is hidden on this page. It still appears on the Giving page, and their profiles stay available.' }),
     text('advancementTitle', 'Advancement heading', 1, 'body'),
     text('advancementIntro', 'Advancement intro', 2, 'body'),
     text('givingEyebrow', 'Closing band: eyebrow', 1, 'body'),
@@ -383,9 +383,9 @@ export const whyPage = defineType({
 
 export const givingPage = defineType({
   name: 'givingPage',
-  title: 'A Founding Opportunity',
+  title: 'Giving',
   type: 'document',
-  description: 'Donor page at /founding-opportunity. Not in the navigation; linked from the Advancement band on The Visionaries.',
+  description: 'The Giving page at /giving, in the top navigation.',
   groups: [{ name: 'hero', title: 'Hero', default: true }, { name: 'body', title: 'Sections' }],
   fields: [
     ...hero(),
@@ -428,7 +428,7 @@ export const givingPage = defineType({
     text('formButton', 'Form button', 1, 'body'),
     text('otherBody', 'Gift: last list item', 3, 'body'),
   ],
-  preview: { prepare: () => ({ title: 'A Founding Opportunity' }) },
+  preview: { prepare: () => ({ title: 'Giving' }) },
 })
 
 export const page = defineType({

@@ -10,6 +10,7 @@ const LINKS = [
   { href: '/learning-experience', label: 'Learning Experience' },
   { href: '/campus', label: 'The Campus' },
   { href: '/visionaries', label: 'The Visionaries' },
+  { href: '/giving', label: 'Giving' },
 ]
 
 export async function generateMetadata(): Promise<Metadata> {

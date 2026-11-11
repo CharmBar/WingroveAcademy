@@ -234,7 +234,7 @@ a{color:inherit}
 /* ---------- Narrow screens ---------- */
 /* Tablets and phones: links move into the menu */
 .burger{display:none}
-@media (max-width:1130px){
+@media (max-width:1220px){
   .hdr__nav .hdr__link{display:none}
   .hdr__nav{gap:14px}
   .hdr{gap:12px}

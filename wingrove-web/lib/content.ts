@@ -38,7 +38,7 @@ export const defaults = {
   settings: {
     title: 'Wingrove Academy',
     description: 'A private PK–12 school in the Village of Wellington, FL. Opening Fall 2029.',
-    ctaLabel: 'Become an Insider',
+    ctaLabel: 'Follow Our Journey',
     contactEmail: 'info@wingroveacademy.org',
     place: 'Village of Wellington, FL',
     instagram: '/wingroveacademy',
@@ -80,7 +80,7 @@ export const defaults = {
       { eyebrow: 'The Campus', title: 'An Exceptional Setting for Learning and Growth', body: 'Academic, arts, and athletics facilities connected through open green space and lakes.', linkLabel: 'Explore the campus', href: '/campus', fallback: 'campus', alt: 'Illustrated aerial view of the Wingrove campus with its lakes, academic buildings and athletic fields' },
       { eyebrow: 'The Visionaries', title: 'Global Experience, A Shared Ambition', body: 'The founders and advancement team building Wingrove, with experience designing, opening, and guiding distinguished schools around the world.', linkLabel: 'Meet the team', href: '/visionaries', fallback: 'dining', alt: 'Dining courtyard with students gathered on the lawn under a shade tree' },
     ] as Chapter[],
-    insiderEyebrow: 'Become an Insider',
+    insiderEyebrow: 'Follow Our Journey',
     insiderTitle: 'A Legacy in the Making',
     insiderSubtitle: 'Follow the vision taking shape for generations to come.',
     insiderBody:

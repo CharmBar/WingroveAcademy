@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 /**
- * Become an Insider sign-up.
+ * Follow Our Journey sign-up.
  * Sends each sign-up to Wingrove's OWN HubSpot account 242324058 (never ElevateED's 247877716).
  * Form: "Become an Insider" (d146e057…), region na2. HUBSPOT_INSIDER_FORM_ID / HUBSPOT_REGION override these.
  * Optionally also emails the team through Resend (RESEND_API_KEY + INSIDER_NOTIFY_TO + INSIDER_FROM).
@@ -46,7 +46,7 @@ async function sendHubSpot(body: Record<string, string>, req: Request) {
   const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://wingroveacademy.ai'
   const region = process.env.HUBSPOT_REGION ?? WINGROVE_REGION
   const submit = async (fields: typeof all) => {
-    const payload = JSON.stringify({ fields, context: { ...(hutk ? { hutk } : {}), pageUri: `${site}${body.page || '/'}`, pageName: 'Become an Insider' } })
+    const payload = JSON.stringify({ fields, context: { ...(hutk ? { hutk } : {}), pageUri: `${site}${body.page || '/'}`, pageName: 'Follow Our Journey' } })
     const post = (host: string) =>
       fetch(`https://${host}/submissions/v3/integration/submit/${portalId}/${formId}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload })
     // The account is hosted in na2, so try its regional host first, then the global one
@@ -88,7 +88,7 @@ async function sendEmail(body: Record<string, string>) {
       from,
       to: to.split(',').map((s) => s.trim()),
       reply_to: body.email,
-      subject: `New Wingrove Insider: ${rows[0]?.[1] || body.email}`,
+      subject: `New Wingrove sign-up: ${rows[0]?.[1] || body.email}`,
       text: rows.map(([l, v]) => `${l}: ${v}`).join('\n'),
       html: `<table style="font:15px/1.5 Arial,sans-serif">${rows.map(([l, v]) => `<tr><td style="padding:4px 16px 4px 0;color:#5b6470">${esc(l)}</td><td>${esc(v)}</td></tr>`).join('')}</table>`,
     }),
@@ -117,5 +117,5 @@ export async function POST(req: Request) {
   if (!hub && !mail) {
     return NextResponse.json({ ok: false, message: 'Sorry, that didn’t go through. Please try again.' }, { status: 502 })
   }
-  return NextResponse.json({ ok: true, message: 'You’re in. Welcome to Wingrove Insiders.' })
+  return NextResponse.json({ ok: true, message: 'You’re in. Thank you for following our journey.' })
 }

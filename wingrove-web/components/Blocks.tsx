@@ -82,11 +82,11 @@ export function InsiderBand() {
     <section className="band insider-band">
       <div className="wrap">
         <div>
-          <div className="eyebrow">Become an Insider</div>
+          <div className="eyebrow">Follow Our Journey</div>
           <p className="insider-band__title">Follow the vision taking shape for generations to come.</p>
         </div>
         <a className="btn" href="/#updates">
-          Follow Our Journey
+          Sign Up
         </a>
       </div>
     </section>

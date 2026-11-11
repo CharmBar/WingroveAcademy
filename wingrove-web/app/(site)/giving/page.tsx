@@ -8,13 +8,12 @@ import { getGiving, getPeople, getTeam } from '@/lib/pages'
 
 export const revalidate = 60
 export const metadata: Metadata = {
-  title: 'A Founding Opportunity',
+  title: 'Giving',
   description: 'Help shape an enduring institution: founding philanthropy at Wingrove Academy.',
-  robots: { index: false, follow: false },
 }
 
-/** Donor page. Not in the navigation: reached from the Advancement band on The Visionaries. */
-export default async function FoundingOpportunityPage() {
+/** Giving: in the top navigation, and linked from the Advancement band on The Visionaries. */
+export default async function GivingPage() {
   const [g, t, people] = await Promise.all([getGiving(), getTeam(), getPeople()])
   const advancement = people.filter((p) => p.group === 'advancement')
   return (
