@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { InsiderBand } from '@/components/Blocks'
-import { Portrait } from '@/components/Person'
+import { Portrait, roleIn } from '@/components/Person'
 import { getPerson, getVisiblePeople } from '@/lib/pages'
 
 export const revalidate = 60
@@ -13,7 +13,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await getPerson((await params).slug)
-  return p ? { title: p.role ? `${p.name}, ${p.role}` : p.name, description: p.shortBio?.replace(/\s+/g, ' ').trim() } : {}
+  const role = p && roleIn(p, p.group)
+  return p ? { title: role ? `${p.name}, ${role}` : p.name, description: p.shortBio?.replace(/\s+/g, ' ').trim() } : {}
 }
 
 export default async function PersonPage({ params }: Props) {
@@ -35,7 +36,7 @@ export default async function PersonPage({ params }: Props) {
             </div>
             <div className="profile__text">
               <h1>{p.name}</h1>
-              {p.role && <p className="profile__role">{p.role}</p>}
+              {roleIn(p, p.group) && <p className="profile__role">{roleIn(p, p.group)}</p>}
               <hr className="rule rule--green" />
               {bio.length ? (
                 bio.map((para, i) => (
