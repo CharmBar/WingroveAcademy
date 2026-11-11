@@ -8,7 +8,7 @@ const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
 /**
  * Illustrated site plan with lettered (navy) and numbered (light blue) markers. Selecting a marker or
  * a list item highlights both; markers that share a label and mark (the two Gate Houses) light up together.
- * The list shows letters first, then numbers, each place once.
+ * The list shows letters first, then numbers, each place once; on desktop the letters run down two columns.
  */
 export default function SitePlan({
   src,
@@ -37,6 +37,9 @@ export default function SitePlan({
     return true
   })
 
+  const letters = list.filter((a) => a.kind === 'letter')
+  const numbers = list.filter((a) => a.kind === 'number')
+
   return (
     <div className="plan">
       <div className="plan__map" style={shift ? { transform: `translateX(-${shift}%)` } : undefined}>
@@ -63,16 +66,26 @@ export default function SitePlan({
           </div>
         )}
       </div>
-      <ol className="plan__list">
-        {list.map((a) => (
-          <li key={group(a)} className={a.kind === 'number' && list.find((x) => x.kind === 'number') === a ? 'plan__list-break' : undefined}>
-            <button type="button" className={on(a) ? 'is-on' : ''} onClick={() => toggle(a.i)} onMouseEnter={() => setActive(a.i)}>
-              <span className={`plan__num plan__num--${a.kind}`}>{a.mark}</span>
-              {a.label}
-            </button>
-          </li>
-        ))}
-      </ol>
+      <div className="plan__legend">
+        {[letters, numbers].map((group, gi) =>
+          group.length ? (
+            <ol
+              key={gi}
+              className={`plan__list plan__list--${gi ? 'numbers' : 'letters'}`}
+              style={{ ['--rows' as string]: Math.ceil(group.length / 2) }}
+            >
+              {group.map((a) => (
+                <li key={`${a.kind}:${a.mark}:${a.label}`}>
+                  <button type="button" className={on(a) ? 'is-on' : ''} onClick={() => toggle(a.i)} onMouseEnter={() => setActive(a.i)}>
+                    <span className={`plan__num plan__num--${a.kind}`}>{a.mark}</span>
+                    {a.label}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          ) : null,
+        )}
+      </div>
     </div>
   )
 }
