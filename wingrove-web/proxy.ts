@@ -19,5 +19,5 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   // Everything except the gate itself, the Studio (it has its own Sanity login), Next.js files and the gate's own images.
-  matcher: ['/((?!gate|api/gate|studio|_next/|favicon\\.ico|icon\\.png|apple-icon\\.png|robots\\.txt|brand/|media/elevation-sm\\.webp).*)'],
+  matcher: ['/((?!gate|api/gate|studio|_next/|favicon\\.ico|icon\\.png|icon\\.svg|apple-icon\\.png|robots\\.txt|brand/|media/elevation-sm\\.webp).*)'],
 }
