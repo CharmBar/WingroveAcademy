@@ -28,7 +28,7 @@ export default async function PersonPage({ params }: Props) {
       <section className="band profile">
         <div className="wrap">
           <nav className="crumbs" aria-label="Breadcrumb">
-            <a href="/visionaries">The Visionaries</a> / {p.name}
+            {p.group === 'advancement' ? <a href="/giving#advancement">Advancement</a> : <a href="/visionaries">The Visionaries</a>} / {p.name}
           </nav>
           <div className="profile__grid">
             <div className="profile__media">
