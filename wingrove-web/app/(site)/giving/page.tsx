@@ -88,9 +88,9 @@ export default async function GivingPage() {
       {advancement.length > 0 && (
         <section className="band team" id="advancement">
           <div className="wrap">
-            <h2 className="h2">{t.advancementTitle}</h2>
+            <h2 className="h2">{g.teamTitle || t.advancementTitle}</h2>
             <hr className="rule rule--green" />
-            <p className="section-lead">{t.advancementIntro}</p>
+            <p className="section-lead">{g.teamIntro || t.advancementIntro}</p>
             <div className="team__grid">
               {advancement.map((p) => (
                 <PersonCard key={p.slug} p={p} section="advancement" />

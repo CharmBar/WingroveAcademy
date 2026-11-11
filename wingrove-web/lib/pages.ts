@@ -467,6 +467,8 @@ export async function getGiving() {
     giftBody: t('giftBody'),
     formButton: t('formButton'),
     otherBody: t('otherBody'),
+    teamTitle: (s.teamTitle as string) || '',
+    teamIntro: (s.teamIntro as string) || '',
   }
 }
 
