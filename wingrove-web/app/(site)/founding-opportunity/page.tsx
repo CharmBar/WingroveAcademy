@@ -83,7 +83,7 @@ export default async function FoundingOpportunityPage() {
               <li>{g.otherBody}</li>
             </ul>
           </div>
-          <InsiderForm button={g.formButton} defaultRole="Donor or partner" />
+          <InsiderForm button={g.formButton} defaultInterests={['Capital Campaign']} />
         </div>
       </section>
       {advancement.length > 0 && (
