@@ -481,8 +481,8 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .region p:first-of-type{color:var(--navy);font-family:var(--display);font-size:clamp(20px,1.8vw,25px);line-height:1.4}
 .region .rule{margin:.6em 0 1.6em}
 /* Native frond accent under the South Florida headline (preview) */
-.region__frond{display:block;width:min(100%,460px);height:auto;margin:clamp(36px,5vw,64px) 0 0 -2%;opacity:.22;transform:rotate(-6deg);transform-origin:left center;pointer-events:none;user-select:none}
-@media (max-width:880px){.region__frond{width:min(70%,300px);margin:20px 0 4px}}
+.region__frond{display:block;width:min(100%,460px);height:auto;margin:clamp(36px,5vw,64px) auto 0;opacity:.22;transform:rotate(-6deg);transform-origin:center;pointer-events:none;user-select:none}
+@media (max-width:880px){.region__frond{width:min(70%,300px);margin:20px auto 4px}}
 @media (max-width:880px){.region__grid{grid-template-columns:minmax(0,1fr)}}
 
 /* Footer: Wingrove Answerer (not open yet) */
