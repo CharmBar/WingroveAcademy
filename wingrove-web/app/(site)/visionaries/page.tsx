@@ -42,7 +42,7 @@ export default async function VisionariesPage() {
               <p className="section-lead">{g.intro}</p>
               <div className="team__grid">
                 {g.list.map((p) => (
-                  <PersonCard key={p.slug} p={p} section={g.id as 'leadership' | 'advancement'} />
+                  <PersonCard key={p.slug} p={p} section={g.id as 'leadership' | 'advancement'} from={g.id === 'leadership' ? 'leadership' : 'team'} />
                 ))}
               </div>
             </div>

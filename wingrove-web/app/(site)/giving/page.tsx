@@ -93,7 +93,7 @@ export default async function GivingPage() {
             <p className="section-lead">{g.teamIntro || t.advancementIntro}</p>
             <div className="team__grid">
               {advancement.map((p) => (
-                <PersonCard key={p.slug} p={p} section="advancement" />
+                <PersonCard key={p.slug} p={p} section="advancement" from="giving" />
               ))}
             </div>
           </div>

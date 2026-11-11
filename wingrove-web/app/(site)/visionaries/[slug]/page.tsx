@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { InsiderBand } from '@/components/Blocks'
 import { Portrait, roleIn } from '@/components/Person'
+import ProfileCrumb from '@/components/ProfileCrumb'
 import { getPerson, getVisiblePeople } from '@/lib/pages'
 
 export const revalidate = 60
@@ -27,9 +28,7 @@ export default async function PersonPage({ params }: Props) {
     <>
       <section className="band profile">
         <div className="wrap">
-          <nav className="crumbs" aria-label="Breadcrumb">
-            {p.group === 'advancement' ? <a href="/giving#advancement">Advancement</a> : <a href="/visionaries">The Visionaries</a>} / {p.name}
-          </nav>
+          <ProfileCrumb name={p.name} group={p.group} />
           <div className="profile__grid">
             <div className="profile__media">
               <Portrait p={p} size={900} />

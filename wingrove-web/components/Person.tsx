@@ -26,10 +26,10 @@ export function Portrait({ p, size = 600 }: { p: Person; size?: number }) {
 export const roleIn = (p: Person, section?: string) =>
   p.role && section === 'advancement' && typeof p.leadershipOrder === 'number' && !/elevateed/i.test(p.role) ? `${p.role}, ElevateED` : p.role
 
-export function PersonCard({ p, section }: { p: Person; section?: 'leadership' | 'advancement' }) {
+export function PersonCard({ p, section, from }: { p: Person; section?: 'leadership' | 'advancement'; from?: 'leadership' | 'team' | 'giving' }) {
   const role = roleIn(p, section)
   return (
-    <a className="pcard" href={`/visionaries/${p.slug}`}>
+    <a className="pcard" href={`/visionaries/${p.slug}${from ? `?from=${from}` : ''}`}>
       <div className="pcard__media">
         <Portrait p={p} />
       </div>
