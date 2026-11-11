@@ -56,7 +56,7 @@ export function GivingBand({ eyebrow, title, body, button, href }: { eyebrow: st
   return (
     <section className="band giving">
       <div className="wrap giving__grid">
-        <img className="giving__mark" src="/brand/crest-white.png" alt="" aria-hidden="true" />
+        <img className="giving__mark" src="/brand/crest-white.svg" alt="" aria-hidden="true" />
         <div>
           <div className="eyebrow">{eyebrow}</div>
           <h2 className="giving__title">{title}</h2>

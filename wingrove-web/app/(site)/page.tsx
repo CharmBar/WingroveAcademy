@@ -32,7 +32,7 @@ export default async function Home() {
           <div className="stage__shade" id="shade" />
 
           <div className="lockup" id="lockup">
-            <img className="lockup__crest intro-fade" id="crest" src="/brand/crest-white.png" alt="" />
+            <img className="lockup__crest intro-fade" id="crest" src="/brand/crest-white.svg" alt="" />
             <div className="lockup__word intro-fade intro-fade--late" role="img" aria-label="Wingrove Academy">
               <img className="w1" src="/brand/wingrove-white.png" alt="" />
               <img className="w2" src="/brand/academy-white.png" alt="" />

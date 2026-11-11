@@ -13,7 +13,7 @@ export function Portrait({ p, size = 600 }: { p: Person; size?: number }) {
     <img src={`${p.photo}?w=${size}&auto=format&q=80`} alt={`Portrait of ${p.name}`} loading="lazy" />
   ) : (
     <div className="mono" aria-hidden="true">
-      <img src="/brand/crest-white.png" alt="" />
+      <img src="/brand/crest-white.svg" alt="" />
       <span>{initials(p.name)}</span>
     </div>
   )
