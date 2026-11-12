@@ -66,8 +66,6 @@ export default async function GivingPage() {
         </div>
       </section>
 
-      <QuoteCarousel quotes={g.quotes} image={g.quotesImage} />
-
       <section className="band updates" id="give">
         <div className="wrap">
           <div>
@@ -85,6 +83,8 @@ export default async function GivingPage() {
           <InsiderForm button={g.formButton} defaultInterests={['Capital Campaign']} showPhone />
         </div>
       </section>
+      <QuoteCarousel quotes={g.quotes} image={g.quotesImage} />
+
       {advancement.length > 0 && (
         <section className="band team" id="advancement">
           <div className="wrap">
