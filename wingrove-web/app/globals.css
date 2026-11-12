@@ -374,13 +374,13 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .third__item h3{font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(24px,2.2vw,32px);margin:0 0 .3em}
 .third__item p{margin:0;color:#2F3D4E}
 
-.statement{position:relative;overflow:hidden;background:var(--green);color:var(--white);padding-block:clamp(64px,9vw,120px);text-align:center}
+.statement{position:relative;overflow:hidden;background:var(--navy);color:var(--white);padding-block:clamp(64px,9vw,120px);text-align:center}
 .statement>.wrap{position:relative}
 /* Enlarged Wingrove mark, bleeding past the band's edges */
-.statement__mark{position:absolute;left:50%;top:50%;width:max(820px,78vw);max-width:none;height:auto;transform:translate(-50%,-46%);opacity:.09;pointer-events:none;user-select:none}
+.statement__mark{position:absolute;left:50%;top:50%;width:max(820px,78vw);max-width:none;height:auto;transform:translate(-50%,-46%);opacity:.07;pointer-events:none;user-select:none}
 .statement .eyebrow{color:var(--lime)}
 .statement__text{font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(26px,3vw,42px);line-height:1.3;max-width:28ch;margin:.6em auto .8em;text-wrap:balance}
-.statement__note{margin:0 auto;max-width:52ch;color:#E3ECE5}
+.statement__note{margin:0 auto;max-width:52ch;color:var(--mist)}
 
 /* Gallery */
 .gallery{background:var(--stone);color:var(--navy);padding-block:clamp(64px,9vw,120px)}
