@@ -188,8 +188,21 @@ const galleryField = (group?: string) =>
     name: 'gallery',
     type: 'array',
     group,
-    description: 'In display order. Leave an image empty to keep the current rendering in that position.',
-    of: [defineArrayMember({ type: 'object', fields: [defineField({ name: 'caption', type: 'string' }), img('image', 'Image')], preview: { select: { title: 'caption', media: 'image' } } })],
+    description: 'In display order. Leave an image empty to keep the current rendering in that position. Switch on “Hide” to take a photo off the site without deleting it.',
+    of: [
+      defineArrayMember({
+        type: 'object',
+        fields: [
+          defineField({ name: 'caption', type: 'string' }),
+          img('image', 'Image'),
+          defineField({ name: 'hidden', title: 'Hide', type: 'boolean', initialValue: false, description: 'On: the photo is kept here but not shown on the site.' }),
+        ],
+        preview: {
+          select: { title: 'caption', media: 'image', hidden: 'hidden' },
+          prepare: ({ title, media, hidden }) => ({ title: title || 'Untitled', subtitle: hidden ? 'Hidden' : undefined, media }),
+        },
+      }),
+    ],
   })
 const hero = (group = 'hero') => [
   { ...img('heroImage', 'Hero image'), group },

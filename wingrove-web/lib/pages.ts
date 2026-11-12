@@ -30,14 +30,16 @@ async function fetchQuery<T>(query: string, params: Record<string, unknown> = {}
 
 const doc = async (id: string) => (await fetchQuery<Record<string, any>>(`*[_id == $id][0]`, { id })) || {}
 
-type GalleryItem = { image?: Img; caption?: string }
+type GalleryItem = { image?: Img; caption?: string; hidden?: boolean }
 /** Gallery items from the Studio, matched by position to the default renderings: a caption or image left empty keeps the default. */
 const gallery = (items: GalleryItem[] | undefined, d: { fallback: string; caption: string; alt: string }[]): Pic[] => {
   const list = items?.length ? items : d.map(() => ({}) as GalleryItem)
-  return list.map((g, i) => {
+  // Positions are matched before hidden items are dropped, so hiding one photo never shifts the defaults of the rest.
+  return list.flatMap((g, i) => {
+    if (g.hidden) return []
     const def = d[i] || d[i % d.length]
     const caption = g.caption || def.caption
-    return pic(g.image, def.fallback, g.image?.alt || def.alt, caption, 1600)
+    return [pic(g.image, def.fallback, g.image?.alt || def.alt, caption, 1600)]
   })
 }
 

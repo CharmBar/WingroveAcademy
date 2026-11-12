@@ -31,6 +31,7 @@ const tail = (i: number, n: number) => {
 }
 
 export function Gallery({ title, items }: { title: string; items: Pic[] }) {
+  if (!items.length) return null
   return (
     <section className="band gallery">
       <div className="wrap">
