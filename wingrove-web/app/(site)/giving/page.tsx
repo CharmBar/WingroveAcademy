@@ -30,8 +30,6 @@ export default async function GivingPage() {
         </div>
       </section>
 
-      <QuoteCarousel quotes={g.quotes} image={g.quotesImage} />
-
       <section className="band found-support">
         <div className="wrap found-support__grid">
           <div className="found-support__img">
@@ -99,6 +97,8 @@ export default async function GivingPage() {
           </div>
         </section>
       )}
+
+      <QuoteCarousel quotes={g.quotes} image={g.quotesImage} />
     </>
   )
 }
