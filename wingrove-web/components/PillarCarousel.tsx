@@ -4,6 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { PillarCard } from '@/lib/content'
 
 const INTERVAL = 8000
+/** Matches the section ids on the Why Wingrove page, where each distinction is told in full. */
+const whyId = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 
 /**
  * What Makes Wingrove Distinctive: one large card at a time (image beside the text), the next card
@@ -124,7 +130,9 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
                 </div>
                 <h4>{p.label}</h4>
                 <hr className="rule rule--green" />
-                <p>{p.body}</p>
+                <a className="pc__more" href={`/why-wingrove#${whyId(p.label)}`} tabIndex={k === i ? 0 : -1} onClick={(e) => e.stopPropagation()}>
+                  Read more <span aria-hidden="true">→</span>
+                </a>
               </div>
             </li>
           ))}

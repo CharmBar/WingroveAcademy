@@ -12,8 +12,6 @@ export default async function Home() {
   const a = media(sceneA?.image, sceneA?.fallback || 'courtyard', 3000)
   const b = media(sceneB?.image, sceneB?.fallback || 'commons', 3000)
   const visionBg = imageUrl(h.visionImage, 1600) || '/media/leaf.webp'
-  // "Our vision" set upright, the rest in italic (as in the brochure)
-  const [q1, q2, ...qRest] = h.visionQuote.split(' ')
   return (
     <>
       <section className="stage" id="stage" aria-label="Welcome to Wingrove Academy">
@@ -87,9 +85,6 @@ export default async function Home() {
           <hr className="rule rule--green" />
           <p className="distinct__lead">{h.distinctIntro}</p>
           <PillarCarousel items={h.pillars} />
-          <a className="distinct__more" href="/why-wingrove">
-            Explore why Wingrove <span aria-hidden="true">→</span>
-          </a>
         </div>
       </section>
 
@@ -97,12 +92,7 @@ export default async function Home() {
         <div className="vision__pin">
           <img className="vision__bg" src={visionBg} alt="" loading="lazy" />
           <figure className="vision__q" id="visionQ">
-            <blockquote>
-              <em>
-                {q1} {q2}
-              </em>{' '}
-              {qRest.join(' ')}
-            </blockquote>
+            <blockquote>{h.visionQuote}</blockquote>
             <hr className="rule" />
             <figcaption>
               {h.visionName}

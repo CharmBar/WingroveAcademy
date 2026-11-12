@@ -52,17 +52,14 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <p className="place">{s.place}</p>
           </div>
           <div className="answerer" aria-labelledby="answerer-title">
-            <p className="answerer__title" id="answerer-title">
-              {s.answererTitle}
-            </p>
+            <div className="answerer__head">
+              <p className="answerer__title" id="answerer-title">
+                {s.answererTitle}
+              </p>
+              {/* The Q&A service isn't open yet */}
+              <p className="answerer__soon">{s.answererStatus}</p>
+            </div>
             <p className="answerer__text">{s.answererText}</p>
-            {/* The Q&A service isn't open yet */}
-            <p className="answerer__soon">
-              {s.answererStatus}
-              <svg className="answerer__chev" viewBox="0 0 22 20" aria-hidden="true">
-                <path d="M3 3l7 7-7 7M11 3l7 7-7 7" />
-              </svg>
-            </p>
           </div>
           <div>
             <p className="foot__head">Questions? Contact us</p>
