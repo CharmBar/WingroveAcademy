@@ -46,7 +46,7 @@ export default async function Home() {
           </div>
 
           <div className="line line--a" aria-hidden="true">
-            <p>Wingrove Academy</p>
+            {h.taglineEyebrow && <p>{h.taglineEyebrow}</p>}
             <h2>{h.tagline}</h2>
           </div>
 

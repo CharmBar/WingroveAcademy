@@ -62,7 +62,8 @@ export const homePage = defineType({
   fields: [
     img('heroImage', 'Opening image', 'The wide campus elevation. Use the largest file you have (7,000+ px wide) so the zoom stays sharp.'),
     defineField({ name: 'openingLine', type: 'string', group: 'opening', description: 'Under the crest, e.g. Village of Wellington, FL · Opening Fall 2029' }),
-    defineField({ name: 'tagline', type: 'string', group: 'opening' }),
+    defineField({ name: 'taglineEyebrow', title: 'Small line above the tagline', type: 'string', group: 'opening', description: 'Optional small capitals shown above the tagline as the zoom begins. Leave empty to show nothing.' }),
+    defineField({ name: 'tagline', title: 'Tagline', type: 'string', group: 'opening', description: 'The large italic line, e.g. Where Excellence Finds Purpose' }),
     defineField({
       name: 'scenes',
       title: 'Zoom scenes',

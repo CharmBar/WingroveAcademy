@@ -50,6 +50,7 @@ export const defaults = {
   },
   home: {
     openingLine: 'Village of Wellington, FL · Opening Fall 2029',
+    taglineEyebrow: '',
     tagline: 'Where Excellence Finds Purpose',
     scenes: [
       { caption: 'Performing Arts Courtyard', fallback: 'courtyard' },
@@ -152,6 +153,7 @@ export async function getHome() {
   return {
     heroImage: h.heroImage as Img | undefined,
     openingLine: text('openingLine'),
+    taglineEyebrow: text('taglineEyebrow'),
     tagline: text('tagline'),
     scenes,
     closingLine: text('closingLine'),
