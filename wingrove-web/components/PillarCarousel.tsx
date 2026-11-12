@@ -12,8 +12,7 @@ const whyId = (s: string) =>
     .replace(/^-|-$/g, '')
 
 /**
- * What Makes Wingrove Distinctive: one large card at a time (image beside the text), the next card
- * peeking in. Advances on its own every 8 seconds; pauses on hover, focus, when off screen, and for
+ * What Makes Wingrove Distinctive: one full-width card at a time (image beside the text). Advances on its own every 8 seconds; pauses on hover, focus, when off screen, and for
  * visitors who turn off motion. On touch screens the cards can be swiped left and right; vertical
  * swipes still scroll the page.
  */
@@ -129,9 +128,11 @@ export default function PillarCarousel({ items }: { items: PillarCard[] }) {
                   {pad(k + 1)} <span>/ {pad(n)}</span>
                 </div>
                 <h4>{p.label}</h4>
-                <hr className="rule rule--green" />
-                <a className="pc__more" href={`/why-wingrove#${whyId(p.label)}`} tabIndex={k === i ? 0 : -1} onClick={(e) => e.stopPropagation()}>
-                  Read more <span aria-hidden="true">→</span>
+                <a className="pc__more" href={`/why-wingrove#${whyId(p.label)}`} aria-label={`More about ${p.label}`} tabIndex={k === i ? 0 : -1} onClick={(e) => e.stopPropagation()}>
+                  <span className="pc__bar" />
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 12h15M13 6l6 6-6 6" />
+                  </svg>
                 </a>
               </div>
             </li>
