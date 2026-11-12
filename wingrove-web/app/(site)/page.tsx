@@ -1,5 +1,6 @@
 import InsiderForm from '@/components/InsiderForm'
 import PillarCarousel from '@/components/PillarCarousel'
+import ScrollCue from '@/components/ScrollCue'
 import { getHome, media } from '@/lib/content'
 import { imageUrl } from '@/lib/sanity'
 
@@ -15,6 +16,14 @@ export default async function Home() {
   return (
     <>
       <section className="stage" id="stage" aria-label="Welcome to Wingrove Academy">
+        {/* The opening's words are drawn as animated layers (hidden from screen readers); this is the readable version. */}
+        <div className="sr">
+          <h1>
+            Wingrove Academy: {h.tagline}
+          </h1>
+          <p>{h.openingLine}</p>
+          <p>{h.closingLine}</p>
+        </div>
         <div className="stage__pin">
           <img
             className="stage__img intro-bright"
@@ -60,15 +69,11 @@ export default async function Home() {
             <p>Opening Fall 2029</p>
           </div>
 
-          <div className="cue" aria-hidden="true">
-            <div className="cue__in intro-fade intro-fade--late">
-              Scroll<span />
-            </div>
-          </div>
+          <ScrollCue />
         </div>
       </section>
 
-      <section className="band mission" id="welcome">
+      <section className="band mission" id="welcome" tabIndex={-1}>
         <div className="wrap">
           <div className="mission__body">
             <p className="lead">{h.welcomeLead}</p>
