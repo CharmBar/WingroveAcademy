@@ -34,7 +34,14 @@ export default function ScrollEffects() {
       //    The campus curve starts very slowly, so the lockup gets its own, quicker start: it is
       //    nearer the viewer, keeps growing the whole time it is fading, and never looks parked.
       const lz = Math.pow(seg(p, 0.02, 0.3), 1.35)
-      set(lockup!, '--ly', (-window.innerHeight * 0.06 * lz).toFixed(1) + 'px')
+      //    Rise with the campus: the campus grows from a point near the ground (90% down, see
+      //    .stage__img), so the patch of sky behind the lockup (47% down) climbs as it zooms. The
+      //    lockup follows that patch exactly, plus a little extra lift of its own, so it flies up
+      //    into the sky while the ground stays put.
+      const H = window.innerHeight
+      const zoom = 1 + 2.6 * z
+      const skyRise = -(0.9 - 0.47) * H * (zoom - 1) + -H * 0.05 * z * zoom
+      set(lockup!, '--ly', (skyRise - H * 0.06 * lz).toFixed(1) + 'px')
       set(lockup!, '--ls', (1 + 2.6 * z + 2.2 * lz).toFixed(4))
       set(lockup!, '--lo', (1 - seg(p, 0.06, 0.28)).toFixed(3))
       set(lockup!, '--lb', (6 * seg(p, 0.12, 0.28)).toFixed(2) + 'px')

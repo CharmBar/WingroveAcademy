@@ -64,7 +64,7 @@ a{color:inherit}
 /* Opening lockup, held to the brand lockup's proportions at every size: the crest is 32.4% of the
    WINGROVE width and sits 10.8% of that width above it. --ww (the WINGROVE width) sets everything. */
 .lockup{--ww:min(clamp(270px,33vw,470px),52vh);position:absolute;left:50%;top:47%;display:flex;flex-direction:column;align-items:center;gap:0;
-  transform:translate(-50%,-50%) translate(var(--lx,0px),var(--ly,0px)) scale(var(--ls,1));transform-origin:50% 50%;
+  transform:translate(-50%,-50%) translate(var(--lx,0px),var(--ly,0px)) scale(var(--ls,1));transform-origin:50% 100%;
   opacity:var(--lo,1);filter:blur(var(--lb,0px));will-change:transform,opacity,filter}
 .lockup__crest{width:calc(var(--ww) * .324);height:auto;margin-bottom:calc(var(--ww) * .108);filter:drop-shadow(0 6px 30px rgba(7,28,48,.35))}
 .lockup__word{width:var(--ww);display:flex;flex-direction:column;align-items:center;gap:calc(var(--ww) * .0236);filter:drop-shadow(0 4px 20px rgba(7,28,48,.4))}
