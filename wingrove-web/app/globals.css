@@ -441,21 +441,13 @@ section[id]{scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))}
 .plan__pin--number{background:#A9C8E8;color:var(--navy)}
 .plan__num--number{background:#A9C8E8;color:var(--navy)}
 .plan__list--numbers{margin-top:10px;padding-top:10px;border-top:1px solid #E3DCD3}
-/* The shift lines the campus up with the text when the list sits beside the map (full desktop);
-   phones and tablets, where the map spans the width, keep it centred */
-@media (min-width:1181px){.plan__map{transform:translateX(var(--plan-shift,0%))}}
-/* Small laptops and large tablets: map full width, list beneath in three columns */
-@media (min-width:881px) and (max-width:1180px){
-  .plan{grid-template-columns:minmax(0,1fr)}
-  .plan .plan__legend{padding-top:0}
-  .plan .plan__list--letters{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(var(--rows3),auto)}
-  .plan .plan__list--numbers{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-/* Desktop: letters run down two columns (A–H, then I–P); numbers sit beneath, two across */
+/* Tablets and desktop: map full width, legend beneath in three columns, centred under the map */
 @media (min-width:881px){
-  .plan__legend{padding-top:var(--legend-top,0px)}
-  .plan__list--letters{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(var(--rows),auto);grid-auto-flow:column;column-gap:10px}
-  .plan__list--numbers{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+  .plan{grid-template-columns:minmax(0,1fr)}
+  .plan__list--letters,.plan__list--numbers{grid-template-columns:repeat(3,minmax(0,300px));justify-content:center;column-gap:clamp(16px,3vw,48px)}
+  .plan__list--letters{grid-template-rows:repeat(var(--rows3),auto);grid-auto-flow:column}
+  .plan__list--numbers{border-top:0;position:relative}
+  .plan__list--numbers::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:min(100%,calc(900px + 2 * clamp(16px,3vw,48px)));border-top:1px solid #E3DCD3}
   .plan__list button{font-size:14.5px;padding:7px 6px;gap:10px;line-height:1.3}
 }
 

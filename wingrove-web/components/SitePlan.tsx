@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import type { PlanMark } from '@/lib/pages'
 
 const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
@@ -8,38 +8,23 @@ const group = (a: PlanMark) => `${a.kind}:${a.mark}:${a.label}`
 /**
  * Illustrated site plan with lettered (navy) and numbered (light blue) markers. Selecting a marker or
  * a list item highlights both; markers that share a label and mark (the two Gate Houses) light up together.
- * The list shows letters first, then numbers, each place once; on desktop the letters run down two columns.
+ * The list shows letters first, then numbers, each place once; on tablets and desktop the list sits under the map in three centred columns.
  */
 export default function SitePlan({
   src,
   srcSet,
   areas,
   street,
-  shift = 0,
-  legendTop = 11.5,
 }: {
   src: string
   srcSet?: string
   areas: PlanMark[]
   street?: { label: string; x: number; y: number }
-  /** Moves the map and everything on it left by this % of its width, so the campus edge meets the text edge. */
+  /** No longer used: the map now spans the full width at every size (kept so older callers still compile). */
   shift?: number
-  /** On desktop the list starts this far down the map (% of its height), level with the top of the campus. */
   legendTop?: number
 }) {
   const [active, setActive] = useState<number | null>(null)
-  // The list lines up with where the campus begins in the image, at any width
-  const mapRef = useRef<HTMLDivElement>(null)
-  const [offset, setOffset] = useState(0)
-  useEffect(() => {
-    const el = mapRef.current
-    if (!el) return
-    const measure = () => setOffset(Math.round((el.getBoundingClientRect().height * legendTop) / 100))
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [legendTop])
   const current = areas.find((a) => a.i === active) || null
   const on = (a: PlanMark) => !!current && group(a) === group(current)
   const toggle = (i: number) => setActive(active === i ? null : i)
@@ -57,8 +42,8 @@ export default function SitePlan({
 
   return (
     <div className="plan">
-      <div className="plan__map" ref={mapRef} style={shift ? { ['--plan-shift' as string]: `-${shift}%` } : undefined}>
-        <img src={src} srcSet={srcSet} sizes="(max-width:880px) 100vw, 66vw" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
+      <div className="plan__map">
+        <img src={src} srcSet={srcSet} sizes="(max-width:1400px) 100vw, 1400px" alt="Illustrated aerial plan of the Wingrove Academy campus" loading="lazy" />
         {street?.label && <StreetArrow {...street} />}
         {areas.map((a) => (
           <button
@@ -81,13 +66,13 @@ export default function SitePlan({
           </div>
         )}
       </div>
-      <div className="plan__legend" style={{ ['--legend-top' as string]: `${offset}px` }}>
+      <div className="plan__legend">
         {[letters, numbers].map((group, gi) =>
           group.length ? (
             <ol
               key={gi}
               className={`plan__list plan__list--${gi ? 'numbers' : 'letters'}`}
-              style={{ ['--rows' as string]: Math.ceil(group.length / 2), ['--rows3' as string]: Math.ceil(group.length / 3) }}
+              style={{ ['--rows3' as string]: Math.ceil(group.length / 3) }}
             >
               {group.map((a) => (
                 <li key={`${a.kind}:${a.mark}:${a.label}`}>
