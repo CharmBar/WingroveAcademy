@@ -322,7 +322,7 @@ export const campusPage = defineType({
     text('planTitle', 'Plan title', 1, 'plan'),
     text('planIntro', 'Plan intro', 2, 'plan'),
     { ...img('planImage', 'Illustrated site plan', 'Leave empty to use the current illustration. If you replace it, move the numbers to match.'), group: 'plan' },
-    defineField({ name: 'planShift', title: 'Plan image: shift left (%)', type: 'number', group: 'plan', description: 'Moves the plan (with its markers) left so the campus edge lines up with the text. 9 suits the 2026 rendering; 0 = no shift.' }),
+    defineField({ name: 'planShift', title: 'Plan image: shift left (%)', type: 'number', group: 'plan', hidden: true, description: 'Moves the plan (with its markers) left so the campus edge lines up with the text. 9 suits the 2026 rendering; 0 = no shift.' }),
     text('streetLabel', 'Street name above the plan', 1, 'plan'),
     defineField({ name: 'streetX', title: 'Street arrow tip: across (%)', type: 'number', group: 'plan', description: 'Where the arrow lands on the street; the name sits above and to the left. Default 85.5' }),
     defineField({ name: 'streetY', title: 'Street arrow tip: down (%)', type: 'number', group: 'plan', description: 'Default 15.9' }),
