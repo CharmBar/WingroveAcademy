@@ -28,18 +28,21 @@ export default function ScrollEffects() {
       const r = stage!.getBoundingClientRect()
       const span = stage!.offsetHeight - window.innerHeight
       const p = span > 0 ? clamp(-r.top / span, 0, 1) : 1
-      // 1. crest grows and rises into the clouds as it fades
-      const g = ease(seg(p, 0, 0.26))
-      set(lockup!, '--ly', (-window.innerHeight * 0.4 * g).toFixed(1) + 'px')
-      set(lockup!, '--ls', (1 + 0.85 * g).toFixed(4))
-      set(lockup!, '--lo', (1 - seg(p, 0.03, 0.24)).toFixed(3))
-      set(lockup!, '--lb', (6 * seg(p, 0.08, 0.26)).toFixed(2) + 'px')
+      // 1. crest and wordmark grow at the same rate as the campus behind them (same zoom curve),
+      //    drifting up only slightly, and fade out as they grow rather than sliding off screen
+      const z = ease(seg(p, 0.02, 0.5))
+      //    The campus curve starts very slowly, so the lockup gets its own, quicker start: it is
+      //    nearer the viewer, keeps growing the whole time it is fading, and never looks parked.
+      const lz = Math.pow(seg(p, 0.02, 0.3), 1.35)
+      set(lockup!, '--ly', (-window.innerHeight * 0.06 * lz).toFixed(1) + 'px')
+      set(lockup!, '--ls', (1 + 2.6 * z + 2.2 * lz).toFixed(4))
+      set(lockup!, '--lo', (1 - seg(p, 0.06, 0.28)).toFixed(3))
+      set(lockup!, '--lb', (6 * seg(p, 0.12, 0.28)).toFixed(2) + 'px')
       set(hdr!, '--hdr-logo', seg(p, 0.18, 0.28).toFixed(3))
       set(hdr!, '--hdr-ui', seg(p, 0.14, 0.26).toFixed(3))
       hdr!.classList.toggle('is-locked', p < 0.16)
       set(stage!, '--cue', (1 - seg(p, 0, 0.05)).toFixed(3))
-      // 2. drawing closer to the entrance
-      const z = ease(seg(p, 0.02, 0.5))
+      // 2. drawing closer to the entrance (z, above)
       set(stage!, '--zoom', (1 + 2.6 * z).toFixed(4))
       set(stage!, '--lift', (-window.innerHeight * 0.05 * z).toFixed(1) + 'px')
       set(stage!, '--shade', (1 - 0.6 * seg(p, 0, 0.25) + 1.1 * Math.min(seg(p, 0.24, 0.31), 1 - seg(p, 0.44, 0.5))).toFixed(3))
