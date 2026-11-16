@@ -258,7 +258,7 @@ export const campusDefaults = {
     { fallback: 'commons', caption: 'Middle School Commons', alt: 'Students on the stepped wooden seating of the Middle School commons' },
   ],
   driveEyebrow: 'Closer Than You Think',
-  driveTitle: 'Minutes from the schools you know',
+  driveTitle: 'Minutes from places you know',
   driveIntro: 'Typical weekday-morning drive times to our campus on State Road 7 in Wellington, from schools families across Palm Beach County already know.',
   driveNote: 'Typical weekday mornings, from Google Maps. Actual times vary with traffic.',
   driveCampus: { label: 'Wingrove Academy', lat: 26.6368, lng: -80.2043 }, // 3061 S State Road 7 (approximate; correct in the Studio)

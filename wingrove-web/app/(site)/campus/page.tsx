@@ -42,8 +42,6 @@ export default async function CampusPage() {
         </div>
       </section>
 
-      <DriveMap {...c.drive} />
-
       <section className="band story">
         <div className="wrap story__grid">
           <h2 className="h2">{c.storyTitle}</h2>
@@ -54,6 +52,8 @@ export default async function CampusPage() {
           </div>
         </div>
       </section>
+
+      <DriveMap {...c.drive} />
 
       <section className="band planband" id="plan">
         <div className="wrap">
