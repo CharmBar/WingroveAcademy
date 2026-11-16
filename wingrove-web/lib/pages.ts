@@ -257,6 +257,19 @@ export const campusDefaults = {
     { fallback: 'axon', caption: 'Innovation Center', alt: 'Model view of the Innovation Center and the academic buildings around it' },
     { fallback: 'commons', caption: 'Middle School Commons', alt: 'Students on the stepped wooden seating of the Middle School commons' },
   ],
+  driveEyebrow: 'Closer Than You Think',
+  driveTitle: 'Minutes from the schools you know',
+  driveIntro: 'Typical weekday-morning drive times to our campus on State Road 7 in Wellington, from schools families across Palm Beach County already know.',
+  driveNote: 'Typical weekday mornings, from Google Maps. Actual times vary with traffic.',
+  driveCampus: { label: 'Wingrove Academy', lat: 26.6368, lng: -80.2043 }, // 3061 S State Road 7 (approximate; correct in the Studio)
+  drivePlaces: [
+    { name: 'The King’s Academy', area: 'West Palm Beach', minutes: 15, range: '12–20 at drop-off', lat: 26.6905, lng: -80.169 },
+    { name: 'Oxbridge Academy', area: 'West Palm Beach', minutes: 25, range: '20–30 at drop-off', lat: 26.743, lng: -80.118 },
+    { name: 'American Heritage', area: 'Delray Beach', minutes: 30, range: '25–40 at drop-off', lat: 26.44, lng: -80.163 },
+    { name: 'The Benjamin School', area: 'Upper School · Palm Beach Gardens', minutes: 35, range: '30–45 at drop-off', lat: 26.8605, lng: -80.117 },
+    { name: 'Saint Andrew’s School', area: 'Boca Raton', minutes: 35, range: '30–45 at drop-off', lat: 26.388, lng: -80.158 },
+    { name: 'Pine Crest School', area: 'Boca Raton', minutes: 35, range: '30–45 at drop-off', lat: 26.378, lng: -80.131 },
+  ],
   closing: 'Opening in Fall 2029, the campus is conceived as an enduring educational and civic anchor, enriching Palm Beach County through learning, culture, and community connection.',
 }
 
@@ -288,6 +301,21 @@ export async function getCampus() {
     galleryTitle: t('galleryTitle'),
     gallery: gallery(s.gallery, d.gallery),
     closing: t('closing'),
+    drive: {
+      show: s.driveShow === true,
+      eyebrow: t('driveEyebrow'),
+      title: t('driveTitle'),
+      intro: t('driveIntro'),
+      note: s.driveNote === '' ? '' : t('driveNote'),
+      campus: {
+        label: pick(s.driveCampusLabel as string, d.driveCampus.label),
+        lat: Number.isFinite(s.driveCampusLat) ? Number(s.driveCampusLat) : d.driveCampus.lat,
+        lng: Number.isFinite(s.driveCampusLng) ? Number(s.driveCampusLng) : d.driveCampus.lng,
+      },
+      places: (pick(s.drivePlaces as any[], d.drivePlaces) as any[])
+        .filter((p) => p && p.name && !p.hidden && Number.isFinite(Number(p.minutes)) && Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng)))
+        .map((p) => ({ name: String(p.name), area: p.area || undefined, minutes: Number(p.minutes), range: p.range || undefined, lat: Number(p.lat), lng: Number(p.lng) })),
+    },
   }
 }
 

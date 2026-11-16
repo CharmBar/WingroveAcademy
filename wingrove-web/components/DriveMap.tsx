@@ -1,0 +1,237 @@
+'use client'
+
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { basemap } from '@/lib/driveBasemap'
+
+export type DrivePlace = {
+  name: string
+  area?: string
+  /** Typical weekday-morning minutes to campus */
+  minutes: number
+  /** e.g. "12–20 at drop-off" */
+  range?: string
+  lat: number
+  lng: number
+}
+
+type Props = {
+  show: boolean
+  eyebrow: string
+  title: string
+  intro: string
+  note: string
+  campus: { label: string; lat: number; lng: number }
+  places: DrivePlace[]
+}
+
+const { width: W, height: H, bounds: B } = basemap
+const COS = Math.cos((((B.north + B.south) / 2) * Math.PI) / 180)
+const K = H / (B.north - B.south)
+const MILE = H / ((B.north - B.south) * 69.05)
+const project = (lat: number, lng: number) => ({ x: (lng - B.west) * COS * K, y: (B.north - lat) * K })
+
+/** Orientation only: a few towns most families know. */
+const TOWNS = [
+  { name: 'Palm Beach Gardens', lat: 26.823, lng: -80.138 },
+  { name: 'West Palm Beach', lat: 26.715, lng: -80.054 },
+  { name: 'Royal Palm Beach', lat: 26.708, lng: -80.23 },
+  { name: 'Lake Worth Beach', lat: 26.617, lng: -80.072 },
+  { name: 'Boynton Beach', lat: 26.525, lng: -80.066 },
+  { name: 'Delray Beach', lat: 26.461, lng: -80.073 },
+  { name: 'Boca Raton', lat: 26.368, lng: -80.128 },
+]
+
+type Box = { x: number; y: number; w: number; h: number }
+const hit = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
+
+/**
+ * "Closer than you think": drive times to the campus from places families already know.
+ * Arcs are deliberately stylised (they are not routes); the minutes are what matter.
+ * Hidden until switched on in the Studio, or previewed with ?preview=drive.
+ */
+export default function DriveMap({ show, eyebrow, title, intro, note, campus, places }: Props) {
+  const [visible, setVisible] = useState(show)
+  const [on, setOn] = useState(false)
+  const [active, setActive] = useState<number | null>(null)
+  const [count, setCount] = useState(0)
+  const mapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!show && new URLSearchParams(window.location.search).get('preview') === 'drive') setVisible(true)
+  }, [show])
+
+  // Draw the arcs and count the minutes up once the map is in view
+  useEffect(() => {
+    if (!visible || !mapRef.current) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setOn(true)
+      setCount(1)
+      return
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return
+        io.disconnect()
+        setOn(true)
+        const start = performance.now()
+        const dur = 2200
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / dur)
+          setCount(1 - Math.pow(1 - t, 3))
+          if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      },
+      { threshold: 0.3 },
+    )
+    io.observe(mapRef.current)
+    return () => io.disconnect()
+  }, [visible])
+
+  const sorted = useMemo(() => [...places].sort((a, b) => a.minutes - b.minutes), [places])
+  const c = project(campus.lat, campus.lng)
+
+  const { list: marks, towns } = useMemo(() => {
+    const taken: Box[] = [{ x: c.x - 22, y: c.y - 22, w: 44, h: 44 }]
+    const pins = sorted.map((p) => project(p.lat, p.lng))
+    pins.forEach((q) => taken.push({ x: q.x - 15, y: q.y - 15, w: 30, h: 30 }))
+    // The campus label sits under the campus dot
+    taken.push({ x: c.x - 100, y: c.y + 18, w: 200, h: 26 })
+    const out = sorted.map((p, i) => {
+      const q = pins[i]
+      // Arc: a gentle curve bowing to one side, so the lines read as a fan into the campus
+      const dx = c.x - q.x
+      const dy = c.y - q.y
+      const len = Math.hypot(dx, dy) || 1
+      const bow = Math.min(90, len * 0.22) * (q.y < c.y ? 1 : -1)
+      const cx = (q.x + c.x) / 2 + (-dy / len) * bow
+      const cy = (q.y + c.y) / 2 + (dx / len) * bow
+      // Time label beside the pin, wherever it does not collide
+      const w = 74
+      const h = 30
+      const opts: Box[] = [
+        { x: q.x + 18, y: q.y - h / 2, w, h },
+        { x: q.x - 18 - w, y: q.y - h / 2, w, h },
+        { x: q.x - w / 2, y: q.y - 18 - h, w, h },
+        { x: q.x - w / 2, y: q.y + 18, w, h },
+      ]
+      const box = opts.find((b) => b.x > 4 && b.x + b.w < W - 4 && !taken.some((t) => hit(b, t))) || opts[0]
+      taken.push(box)
+      return { p, q, d: `M${q.x.toFixed(1)},${q.y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${c.x.toFixed(1)},${c.y.toFixed(1)}`, box }
+    })
+    // Town names only where they don't sit on a pin, a time or the campus label
+    const towns = TOWNS.map((t) => {
+      const q = project(t.lat, t.lng)
+      const w = t.name.length * 9.6
+      const anchor = q.x > W * 0.62 ? 'end' : 'middle'
+      const box = { x: anchor === 'end' ? q.x - w : q.x - w / 2, y: q.y - 13, w, h: 17 }
+      return { ...t, q, anchor, clear: !taken.some((b) => hit(b, box)) }
+    }).filter((t) => t.clear)
+    return { list: out, towns }
+  }, [sorted, c.x, c.y])
+
+  if (!visible) return null
+
+  return (
+    <section className="band drive" id="drive" aria-labelledby="drive-title">
+      <div className="wrap drive__grid">
+        <div className="drive__text">
+          <p className="eyebrow drive__eyebrow">{eyebrow}</p>
+          <h2 className="h2" id="drive-title">
+            {title}
+          </h2>
+          <hr className="rule rule--lime" />
+          <p className="drive__intro">{intro}</p>
+          <ol className="drive__list">
+            {marks.map(({ p }, i) => (
+              <li key={p.name}>
+                <button
+                  type="button"
+                  className={active === i ? 'is-active' : undefined}
+                  onMouseEnter={() => setActive(i)}
+                  onMouseLeave={() => setActive(null)}
+                  onFocus={() => setActive(i)}
+                  onBlur={() => setActive(null)}
+                  aria-label={`${p.name}${p.area ? `, ${p.area}` : ''}: about ${p.minutes} minutes${p.range ? `, ${p.range}` : ''}`}
+                >
+                  <span className="drive__n" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span className="drive__place">
+                    <strong>{p.name}</strong>
+                    {p.area && <span>{p.area}</span>}
+                  </span>
+                  <span className="drive__time" aria-hidden="true">
+                    <strong>
+                      {Math.round(p.minutes * count)}
+                      <small> min</small>
+                    </strong>
+                    {p.range && <span>{p.range}</span>}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          {note && <p className="drive__note">{note}</p>}
+        </div>
+
+        <div className={`drive__map${on ? ' is-on' : ''}${active !== null ? ' has-active' : ''}`} ref={mapRef}>
+          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of central Palm Beach County showing ${campus.label} in Wellington and drive times from ${sorted.map((p) => p.name).join(', ')}.`}>
+            <defs>
+              <radialGradient id="drive-glow">
+                <stop offset="0" stopColor="#BED62F" stopOpacity=".35" />
+                <stop offset="1" stopColor="#BED62F" stopOpacity="0" />
+              </radialGradient>
+              <clipPath id="drive-clip">
+                <rect width={W} height={H} rx="2" />
+              </clipPath>
+            </defs>
+            <g clipPath="url(#drive-clip)">
+              <rect width={W} height={H} className="drive__sea" />
+              {basemap.land.map((d, i) => (
+                <path key={i} d={d} className="drive__land" />
+              ))}
+              {[5, 10, 15].map((mi) => (
+                <g key={mi} className="drive__ring">
+                  <circle cx={c.x} cy={c.y} r={mi * MILE} />
+                  <text x={c.x} y={c.y + mi * MILE - 6} textAnchor="middle">
+                    {mi} mi
+                  </text>
+                </g>
+              ))}
+              {towns.map((t) => (
+                <text key={t.name} x={t.q.x} y={t.q.y} className="drive__town" textAnchor={t.anchor as 'end' | 'middle'}>
+                  {t.name}
+                </text>
+              ))}
+              {marks.map(({ p, d }, i) => (
+                <path key={p.name} d={d} pathLength={1} className={`drive__arc${active === i ? ' is-active' : ''}`} style={{ transitionDelay: `${0.15 + i * 0.12}s` }} />
+              ))}
+              <circle cx={c.x} cy={c.y} r="70" fill="url(#drive-glow)" />
+              <circle cx={c.x} cy={c.y} r="13" className="drive__campus" />
+              <circle cx={c.x} cy={c.y} r="13" className="drive__pulse" />
+              <text x={c.x} y={c.y + 36} className="drive__campus-label" textAnchor="middle">
+                {campus.label}
+              </text>
+              {marks.map(({ p, q, box }, i) => (
+                <g key={p.name} className={`drive__pin${active === i ? ' is-active' : ''}`} onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}>
+                  <circle cx={q.x} cy={q.y} r="13" />
+                  <text x={q.x} y={q.y + 5} textAnchor="middle">
+                    {i + 1}
+                  </text>
+                  <g className="drive__chip" style={{ transitionDelay: `${0.9 + i * 0.12}s` }}>
+                    <rect x={box.x} y={box.y} width={box.w} height={box.h} rx={box.h / 2} />
+                    <text x={box.x + box.w / 2} y={box.y + box.h / 2 + 6} textAnchor="middle">
+                      {Math.round(p.minutes * count)} min
+                    </text>
+                  </g>
+                </g>
+              ))}
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+  )
+}

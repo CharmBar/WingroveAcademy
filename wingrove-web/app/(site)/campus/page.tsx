@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Gallery, InsiderBand, PageHero } from '@/components/Blocks'
+import DriveMap from '@/components/DriveMap'
 import FrondAccent from '@/components/FrondAccent'
 import SitePlan from '@/components/SitePlan'
 import { getCampus } from '@/lib/pages'
@@ -40,6 +41,8 @@ export default async function CampusPage() {
           </div>
         </div>
       </section>
+
+      <DriveMap {...c.drive} />
 
       <section className="band story">
         <div className="wrap story__grid">

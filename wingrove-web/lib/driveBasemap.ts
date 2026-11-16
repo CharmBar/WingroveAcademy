@@ -1,0 +1,3 @@
+/* Generated from Natural Earth 1:10m (public domain): land around central Palm Beach County.
+ * Projection: equirectangular scaled by cos(latitude), 1000 units tall. Regenerate rather than hand-edit. */
+export const basemap = {"width":536,"height":1000,"bounds":{"west":-80.32,"east":-79.99,"south":26.35,"north":26.9},"land":["M-32.5,1036.4 L-32.5,-36.4 L398.0,-36.4 L405.2,-30.9 L415.6,-12.2 L458.0,161.5 L457.7,210.5 L433.0,237.1 L433.0,250.6 L454.3,279.3 L464.0,335.8 L467.5,568.5 L458.2,620.8 L433.0,624.2 L419.2,871.1 L403.3,926.5 L399.6,953.7 L401.2,1016.3 L399.2,1036.4Z"],"lakes":[]} as const
