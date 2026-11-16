@@ -269,7 +269,7 @@ export const campusDefaults = {
     { name: 'Downtown Delray Beach', area: 'Atlantic Avenue', minutes: 35, range: '30–45 at drop-off', lat: 26.4615, lng: -80.0728 },
     { name: 'Downtown Boca Raton', area: 'Mizner Park', minutes: 40, range: '35–50 at drop-off', lat: 26.3555, lng: -80.0855 },
   ],
-  drivePlacesTitle: 'Schools families know',
+  drivePlacesTitle: 'Other Nearby Schools',
   drivePlaces: [
     { name: 'The King’s Academy', area: 'West Palm Beach', minutes: 15, range: '12–20 at drop-off', lat: 26.6905, lng: -80.169 },
     { name: 'Oxbridge Academy', area: 'West Palm Beach', minutes: 25, range: '20–30 at drop-off', lat: 26.743, lng: -80.118 },

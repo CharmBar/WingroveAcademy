@@ -210,7 +210,7 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, la
           <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of central Palm Beach County showing ${campus.label} in Wellington and drive times from ${marks.map((m) => m.p.name).join(', ')}.`}>
             <defs>
               <radialGradient id="drive-glow">
-                <stop offset="0" stopColor="#BED62F" stopOpacity=".35" />
+                <stop offset="0" stopColor="#BED62F" stopOpacity=".55" />
                 <stop offset="1" stopColor="#BED62F" stopOpacity="0" />
               </radialGradient>
               <clipPath id="drive-clip">
