@@ -327,9 +327,36 @@ export const campusPage = defineType({
     text('driveCampusLabel', 'Campus label on the map', 1, 'drive'),
     defineField({ name: 'driveCampusLat', title: 'Campus latitude', type: 'number', group: 'drive', description: 'In Google Maps, right-click the gate and click the numbers at the top to copy them. The first number is latitude (e.g. 26.638).' }),
     defineField({ name: 'driveCampusLng', title: 'Campus longitude', type: 'number', group: 'drive', description: 'The second number, negative (e.g. -80.219).' }),
+    text('driveLandmarksTitle', 'Landmarks: heading', 1, 'drive'),
+    defineField({
+      name: 'driveLandmarks',
+      title: 'Landmarks and drive times',
+      description: 'Well-known places that are not schools, listed first in light blue. Shortest drive first.',
+      type: 'array',
+      group: 'drive',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'name', title: 'Name', type: 'string', validation: (r: any) => r.required() }),
+            defineField({ name: 'area', title: 'Area', type: 'string', description: 'e.g. West Palm Beach' }),
+            defineField({ name: 'minutes', title: 'Typical minutes', type: 'number', validation: (r: any) => r.required().min(1).max(180) }),
+            defineField({ name: 'range', title: 'Range', type: 'string', description: 'Optional, e.g. 12–20 at drop-off' }),
+            defineField({ name: 'lat', title: 'Latitude', type: 'number', validation: (r: any) => r.required().min(25).max(28) }),
+            defineField({ name: 'lng', title: 'Longitude', type: 'number', validation: (r: any) => r.required().min(-82).max(-79) }),
+            defineField({ name: 'hidden', title: 'Hide', type: 'boolean', initialValue: false }),
+          ],
+          preview: {
+            select: { title: 'name', minutes: 'minutes', area: 'area', hidden: 'hidden' },
+            prepare: ({ title, minutes, area, hidden }: any) => ({ title, subtitle: [minutes ? `${minutes} min` : '', area, hidden ? 'Hidden' : ''].filter(Boolean).join(' · ') }),
+          },
+        }),
+      ],
+    }),
+    text('drivePlacesTitle', 'Schools: heading', 1, 'drive'),
     defineField({
       name: 'drivePlaces',
-      title: 'Places and drive times',
+      title: 'Schools and drive times',
       description: 'Shown shortest drive first. Use typical weekday-morning times from Google Maps (“Leave at” about 7:30 am).',
       type: 'array',
       group: 'drive',

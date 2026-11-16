@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { basemap } from '@/lib/driveBasemap'
+import { ROADS, makeRouter } from '@/lib/driveRoads'
 
 export type DrivePlace = {
   name: string
@@ -21,24 +22,28 @@ type Props = {
   intro: string
   note: string
   campus: { label: string; lat: number; lng: number }
+  /** Well-known places (not schools), listed first in their own colour */
+  landmarks: DrivePlace[]
+  landmarksTitle: string
+  /** Schools families already know */
   places: DrivePlace[]
+  placesTitle: string
 }
+
+type Kind = 'landmark' | 'school'
 
 const { width: W, height: H, bounds: B } = basemap
 const COS = Math.cos((((B.north + B.south) / 2) * Math.PI) / 180)
 const K = H / (B.north - B.south)
-const MILE = H / ((B.north - B.south) * 69.05)
 const project = (lat: number, lng: number) => ({ x: (lng - B.west) * COS * K, y: (B.north - lat) * K })
 
 /** Orientation only: a few towns most families know. */
 const TOWNS = [
   { name: 'Palm Beach Gardens', lat: 26.823, lng: -80.138 },
-  { name: 'West Palm Beach', lat: 26.715, lng: -80.054 },
   { name: 'Royal Palm Beach', lat: 26.708, lng: -80.23 },
   { name: 'Lake Worth Beach', lat: 26.617, lng: -80.072 },
   { name: 'Boynton Beach', lat: 26.525, lng: -80.066 },
-  { name: 'Delray Beach', lat: 26.461, lng: -80.073 },
-  { name: 'Boca Raton', lat: 26.368, lng: -80.128 },
+  { name: 'Jupiter', lat: 26.905, lng: -80.11 },
 ]
 
 type Box = { x: number; y: number; w: number; h: number }
@@ -46,13 +51,14 @@ const hit = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y 
 
 /**
  * "Closer than you think": drive times to the campus from places families already know.
- * Arcs are deliberately stylised (they are not routes); the minutes are what matter.
+ * Routes follow a simplified sketch of the main roads (see lib/driveRoads): believable, not exact.
+ * The minutes come from the Studio.
  * Hidden until switched on in the Studio, or previewed with ?preview=drive.
  */
-export default function DriveMap({ show, eyebrow, title, intro, note, campus, places }: Props) {
+export default function DriveMap({ show, eyebrow, title, intro, note, campus, landmarks, landmarksTitle, places, placesTitle }: Props) {
   const [visible, setVisible] = useState(show)
   const [on, setOn] = useState(false)
-  const [active, setActive] = useState<number | null>(null)
+  const [active, setActive] = useState<string | null>(null)
   const [count, setCount] = useState(0)
   const mapRef = useRef<HTMLDivElement>(null)
 
@@ -89,24 +95,26 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
     return () => io.disconnect()
   }, [visible])
 
-  const sorted = useMemo(() => [...places].sort((a, b) => a.minutes - b.minutes), [places])
+  const items = useMemo(() => {
+    const by = (a: DrivePlace, b: DrivePlace) => a.minutes - b.minutes
+    return [
+      ...[...landmarks].sort(by).map((p, i) => ({ p, kind: 'landmark' as Kind, tag: String.fromCharCode(65 + i), id: `l${i}` })),
+      ...[...places].sort(by).map((p, i) => ({ p, kind: 'school' as Kind, tag: String(i + 1), id: `s${i}` })),
+    ]
+  }, [landmarks, places])
   const c = project(campus.lat, campus.lng)
 
   const { list: marks, towns } = useMemo(() => {
+    const router = makeRouter(project)
     const taken: Box[] = [{ x: c.x - 22, y: c.y - 22, w: 44, h: 44 }]
-    const pins = sorted.map((p) => project(p.lat, p.lng))
+    const pins = items.map(({ p }) => project(p.lat, p.lng))
     pins.forEach((q) => taken.push({ x: q.x - 15, y: q.y - 15, w: 30, h: 30 }))
     // The campus label sits under the campus dot
     taken.push({ x: c.x - 100, y: c.y + 18, w: 200, h: 26 })
-    const out = sorted.map((p, i) => {
+    const out = items.map((it, i) => {
       const q = pins[i]
-      // Arc: a gentle curve bowing to one side, so the lines read as a fan into the campus
-      const dx = c.x - q.x
-      const dy = c.y - q.y
-      const len = Math.hypot(dx, dy) || 1
-      const bow = Math.min(90, len * 0.22) * (q.y < c.y ? 1 : -1)
-      const cx = (q.x + c.x) / 2 + (-dy / len) * bow
-      const cy = (q.y + c.y) / 2 + (dx / len) * bow
+      const pts = router.route(q, c)
+      const d = pts.map((pt, k) => `${k ? 'L' : 'M'}${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')
       // Time label beside the pin, wherever it does not collide
       const w = 74
       const h = 30
@@ -118,9 +126,8 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
       ]
       const box = opts.find((b) => b.x > 4 && b.x + b.w < W - 4 && !taken.some((t) => hit(b, t))) || opts[0]
       taken.push(box)
-      return { p, q, d: `M${q.x.toFixed(1)},${q.y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${c.x.toFixed(1)},${c.y.toFixed(1)}`, box }
+      return { ...it, q, d, box }
     })
-    // Town names only where they don't sit on a pin, a time or the campus label
     const towns = TOWNS.map((t) => {
       const q = project(t.lat, t.lng)
       const w = t.name.length * 9.6
@@ -129,7 +136,48 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
       return { ...t, q, anchor, clear: !taken.some((b) => hit(b, box)) }
     }).filter((t) => t.clear)
     return { list: out, towns }
-  }, [sorted, c.x, c.y])
+  }, [items, c.x, c.y])
+
+  const roadPaths = useMemo(
+    () =>
+      ROADS.map((r) => ({
+        ...r,
+        d: r.pts.map((p, k) => { const q = project(p[0], p[1]); return `${k ? 'L' : 'M'}${q.x.toFixed(1)},${q.y.toFixed(1)}` }).join(' '),
+        lab: r.label ? { ...project(r.label.at[0], r.label.at[1]), text: r.label.text } : null,
+      })),
+    [],
+  )
+
+  const row = (m: (typeof marks)[number]) => (
+    <li key={m.id}>
+      <button
+        type="button"
+        className={active === m.id ? 'is-active' : undefined}
+        onMouseEnter={() => setActive(m.id)}
+        onMouseLeave={() => setActive(null)}
+        onFocus={() => setActive(m.id)}
+        onBlur={() => setActive(null)}
+        aria-label={`${m.p.name}${m.p.area ? `, ${m.p.area}` : ''}: about ${m.p.minutes} minutes${m.p.range ? `, ${m.p.range}` : ''}`}
+      >
+        <span className={`drive__n drive__n--${m.kind}`} aria-hidden="true">
+          {m.tag}
+        </span>
+        <span className="drive__place">
+          <strong>{m.p.name}</strong>
+          {m.p.area && <span>{m.p.area}</span>}
+        </span>
+        <span className="drive__time" aria-hidden="true">
+          <strong>
+            {Math.round(m.p.minutes * count)}
+            <small> min</small>
+          </strong>
+          {m.p.range && <span>{m.p.range}</span>}
+        </span>
+      </button>
+    </li>
+  )
+  const lms = marks.filter((m) => m.kind === 'landmark')
+  const sch = marks.filter((m) => m.kind === 'school')
 
   if (!visible) return null
 
@@ -143,41 +191,23 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
           </h2>
           <hr className="rule rule--lime" />
           <p className="drive__intro">{intro}</p>
-          <ol className="drive__list">
-            {marks.map(({ p }, i) => (
-              <li key={p.name}>
-                <button
-                  type="button"
-                  className={active === i ? 'is-active' : undefined}
-                  onMouseEnter={() => setActive(i)}
-                  onMouseLeave={() => setActive(null)}
-                  onFocus={() => setActive(i)}
-                  onBlur={() => setActive(null)}
-                  aria-label={`${p.name}${p.area ? `, ${p.area}` : ''}: about ${p.minutes} minutes${p.range ? `, ${p.range}` : ''}`}
-                >
-                  <span className="drive__n" aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  <span className="drive__place">
-                    <strong>{p.name}</strong>
-                    {p.area && <span>{p.area}</span>}
-                  </span>
-                  <span className="drive__time" aria-hidden="true">
-                    <strong>
-                      {Math.round(p.minutes * count)}
-                      <small> min</small>
-                    </strong>
-                    {p.range && <span>{p.range}</span>}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ol>
+          {lms.length > 0 && (
+            <>
+              <h3 className="drive__group drive__group--landmark">{landmarksTitle}</h3>
+              <ol className="drive__list">{lms.map(row)}</ol>
+            </>
+          )}
+          {sch.length > 0 && (
+            <>
+              <h3 className="drive__group drive__group--school">{placesTitle}</h3>
+              <ol className="drive__list">{sch.map(row)}</ol>
+            </>
+          )}
           {note && <p className="drive__note">{note}</p>}
         </div>
 
         <div className={`drive__map${on ? ' is-on' : ''}${active !== null ? ' has-active' : ''}`} ref={mapRef}>
-          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of central Palm Beach County showing ${campus.label} in Wellington and drive times from ${sorted.map((p) => p.name).join(', ')}.`}>
+          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of central Palm Beach County showing ${campus.label} in Wellington and drive times from ${marks.map((m) => m.p.name).join(', ')}.`}>
             <defs>
               <radialGradient id="drive-glow">
                 <stop offset="0" stopColor="#BED62F" stopOpacity=".35" />
@@ -192,21 +222,21 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
               {basemap.land.map((d, i) => (
                 <path key={i} d={d} className="drive__land" />
               ))}
-              {[5, 10, 15].map((mi) => (
-                <g key={mi} className="drive__ring">
-                  <circle cx={c.x} cy={c.y} r={mi * MILE} />
-                  <text x={c.x} y={c.y + mi * MILE - 6} textAnchor="middle">
-                    {mi} mi
-                  </text>
-                </g>
+              {roadPaths.map((r) => (
+                <path key={r.name} d={r.d} className={`drive__road drive__road--${r.kind}`} />
+              ))}
+              {roadPaths.map((r) => r.lab && (
+                <text key={`${r.name}-l`} x={r.lab.x} y={r.lab.y} className="drive__roadlabel" textAnchor="middle">
+                  <tspan>{r.lab.text}</tspan>
+                </text>
               ))}
               {towns.map((t) => (
                 <text key={t.name} x={t.q.x} y={t.q.y} className="drive__town" textAnchor={t.anchor as 'end' | 'middle'}>
                   {t.name}
                 </text>
               ))}
-              {marks.map(({ p, d }, i) => (
-                <path key={p.name} d={d} pathLength={1} className={`drive__arc${active === i ? ' is-active' : ''}`} style={{ transitionDelay: `${0.15 + i * 0.12}s` }} />
+              {marks.map((m, i) => (
+                <path key={m.id} d={m.d} pathLength={1} className={`drive__arc drive__arc--${m.kind}${active === m.id ? ' is-active' : ''}`} style={{ transitionDelay: `${0.15 + i * 0.1}s` }} />
               ))}
               <circle cx={c.x} cy={c.y} r="70" fill="url(#drive-glow)" />
               <circle cx={c.x} cy={c.y} r="13" className="drive__campus" />
@@ -214,13 +244,13 @@ export default function DriveMap({ show, eyebrow, title, intro, note, campus, pl
               <text x={c.x} y={c.y + 36} className="drive__campus-label" textAnchor="middle">
                 {campus.label}
               </text>
-              {marks.map(({ p, q, box }, i) => (
-                <g key={p.name} className={`drive__pin${active === i ? ' is-active' : ''}`} onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}>
+              {marks.map(({ p, q, box, id, kind, tag }, i) => (
+                <g key={id} className={`drive__pin drive__pin--${kind}${active === id ? ' is-active' : ''}`} onMouseEnter={() => setActive(id)} onMouseLeave={() => setActive(null)}>
                   <circle cx={q.x} cy={q.y} r="13" />
                   <text x={q.x} y={q.y + 5} textAnchor="middle">
-                    {i + 1}
+                    {tag}
                   </text>
-                  <g className="drive__chip" style={{ transitionDelay: `${0.9 + i * 0.12}s` }}>
+                  <g className="drive__chip" style={{ transitionDelay: `${0.9 + i * 0.1}s` }}>
                     <rect x={box.x} y={box.y} width={box.w} height={box.h} rx={box.h / 2} />
                     <text x={box.x + box.w / 2} y={box.y + box.h / 2 + 6} textAnchor="middle">
                       {Math.round(p.minutes * count)} min

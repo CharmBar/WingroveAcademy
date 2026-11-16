@@ -262,6 +262,14 @@ export const campusDefaults = {
   driveIntro: 'Typical weekday-morning drive times to our campus on State Road 7 in Wellington, from schools families across Palm Beach County already know.',
   driveNote: 'Typical weekday mornings, from Google Maps. Actual times vary with traffic.',
   driveCampus: { label: 'Wingrove Academy', lat: 26.6368, lng: -80.2043 }, // 3061 S State Road 7 (approximate; correct in the Studio)
+  driveLandmarksTitle: 'Around the county',
+  driveLandmarks: [
+    { name: 'Wellington Equestrian', area: 'Wellington International', minutes: 10, range: '8–15 at drop-off', lat: 26.6045, lng: -80.2635 },
+    { name: 'Downtown West Palm Beach', area: 'Clematis Street', minutes: 30, range: '25–40 at drop-off', lat: 26.7135, lng: -80.053 },
+    { name: 'Downtown Delray Beach', area: 'Atlantic Avenue', minutes: 35, range: '30–45 at drop-off', lat: 26.4615, lng: -80.0728 },
+    { name: 'Downtown Boca Raton', area: 'Mizner Park', minutes: 40, range: '35–50 at drop-off', lat: 26.3555, lng: -80.0855 },
+  ],
+  drivePlacesTitle: 'Schools families know',
   drivePlaces: [
     { name: 'The King’s Academy', area: 'West Palm Beach', minutes: 15, range: '12–20 at drop-off', lat: 26.6905, lng: -80.169 },
     { name: 'Oxbridge Academy', area: 'West Palm Beach', minutes: 25, range: '20–30 at drop-off', lat: 26.743, lng: -80.118 },
@@ -272,6 +280,11 @@ export const campusDefaults = {
   ],
   closing: 'Opening in Fall 2029, the campus is conceived as an enduring educational and civic anchor, enriching Palm Beach County through learning, culture, and community connection.',
 }
+
+const drivePlaces = (list: any[]) =>
+  (list || [])
+    .filter((p) => p && p.name && !p.hidden && Number.isFinite(Number(p.minutes)) && Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng)))
+    .map((p) => ({ name: String(p.name), area: p.area || undefined, minutes: Number(p.minutes), range: p.range || undefined, lat: Number(p.lat), lng: Number(p.lng) }))
 
 export async function getCampus() {
   const s = await doc('campusPage')
@@ -312,9 +325,10 @@ export async function getCampus() {
         lat: Number.isFinite(s.driveCampusLat) ? Number(s.driveCampusLat) : d.driveCampus.lat,
         lng: Number.isFinite(s.driveCampusLng) ? Number(s.driveCampusLng) : d.driveCampus.lng,
       },
-      places: (pick(s.drivePlaces as any[], d.drivePlaces) as any[])
-        .filter((p) => p && p.name && !p.hidden && Number.isFinite(Number(p.minutes)) && Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng)))
-        .map((p) => ({ name: String(p.name), area: p.area || undefined, minutes: Number(p.minutes), range: p.range || undefined, lat: Number(p.lat), lng: Number(p.lng) })),
+      landmarksTitle: t('driveLandmarksTitle'),
+      landmarks: drivePlaces(pick(s.driveLandmarks as any[], d.driveLandmarks)),
+      placesTitle: t('drivePlacesTitle'),
+      places: drivePlaces(pick(s.drivePlaces as any[], d.drivePlaces)),
     },
   }
 }
